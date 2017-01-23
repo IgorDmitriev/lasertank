@@ -96,11 +96,19 @@ Goals for the day:
 ### Bonus features ###
 
 Original game has much more objects, and at some point I would like to implement all of them:
+
 `Movable Mirror` and `Rotary Mirror` - Deflects `Laser`
+
 `Crystal Block` - Can shoot through
+
 `Anti-Tank` - Will kill Tank if on his way. Can be moved. Can be destroyed.
+
 `Tank Mover` - Moves only Tank
+
 `Ice` - Slide across
+
 `Thin Ice` - Turns to water
+
 `Bricks` - Shoot to destroy
+
 `Tunnel` - Can be 8 types of tunnels. Any numbers of each type.
