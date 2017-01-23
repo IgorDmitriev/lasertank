@@ -2,9 +2,9 @@ const path = require('path');
 
 module.exports = {
   context: __dirname,
-  entry: './frontend/lasertank.jsx',
+  entry: './frontend/index.jsx',
   output: {
-    path: path.join(__dirname, 'app', 'assets', 'javascripts'),
+    path: './',
     filename: 'bundle.js'
   },
   resolve: {
