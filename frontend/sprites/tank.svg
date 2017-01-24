@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Tank</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="1" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowOffsetOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <rect id="path-2" x="0" y="0" width="19" height="74" rx="9.5"></rect>
+        <mask id="mask-3" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="19" height="74" fill="white">
+            <use xlink:href="#path-2"></use>
+        </mask>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="1" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowOffsetOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <rect id="path-5" x="0" y="0" width="19" height="74" rx="9.5"></rect>
+        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="19" height="74" fill="white">
+            <use xlink:href="#path-5"></use>
+        </mask>
+        <radialGradient cx="50%" cy="65.4443751%" fx="50%" fy="65.4443751%" r="56.7330818%" id="radialGradient-7">
+            <stop stop-color="#8C8585" offset="0%"></stop>
+            <stop stop-color="#D8D8D8" offset="100%"></stop>
+        </radialGradient>
+        <circle id="path-8" cx="39" cy="48" r="30"></circle>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-9">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="1" dy="1" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feComposite in="shadowOffsetOuter1" in2="SourceAlpha" operator="out" result="shadowOffsetOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowOffsetOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-10" x="34" y="0" width="10" height="43" rx="5"></rect>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-11">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <mask id="mask-12" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="10" height="43" fill="white">
+            <use xlink:href="#path-10"></use>
+        </mask>
+        <circle id="path-13" cx="39" cy="48" r="15"></circle>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-14">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Tank">
+            <g id="Group-2">
+                <rect id="Rectangle-2" x="0" y="0" width="100" height="100"></rect>
+                <g id="Group-3" transform="translate(11.000000, 8.000000)">
+                    <g id="Group" filter="url(#filter-1)" transform="translate(0.000000, 11.000000)">
+                        <use id="Rectangle-5" stroke="#979797" mask="url(#mask-3)" stroke-width="2" fill="#D8D8D8" xlink:href="#path-2"></use>
+                        <rect id="Rectangle-6" fill="#9B9B9B" x="0" y="9" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy" fill="#9B9B9B" x="0" y="19" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy-2" fill="#9B9B9B" x="0" y="29" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy-3" fill="#9B9B9B" x="0" y="39" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy-4" fill="#9B9B9B" x="0" y="49" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy-5" fill="#9B9B9B" x="0" y="59" width="19" height="2"></rect>
+                    </g>
+                    <g id="Group-Copy" filter="url(#filter-4)" transform="translate(59.000000, 11.000000)">
+                        <use id="Rectangle-5" stroke="#979797" mask="url(#mask-6)" stroke-width="2" fill="#D8D8D8" xlink:href="#path-5"></use>
+                        <rect id="Rectangle-6" fill="#9B9B9B" x="0" y="9" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy" fill="#9B9B9B" x="0" y="19" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy-2" fill="#9B9B9B" x="0" y="29" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy-3" fill="#9B9B9B" x="0" y="39" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy-4" fill="#9B9B9B" x="0" y="49" width="19" height="2"></rect>
+                        <rect id="Rectangle-6-Copy-5" fill="#9B9B9B" x="0" y="59" width="19" height="2"></rect>
+                    </g>
+                    <g id="Oval">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-9)" xlink:href="#path-8"></use>
+                        <use stroke="#979797" stroke-width="1" fill="url(#radialGradient-7)" fill-rule="evenodd" xlink:href="#path-8"></use>
+                    </g>
+                    <g id="Rectangle">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-11)" xlink:href="#path-10"></use>
+                        <use stroke="#979797" mask="url(#mask-12)" stroke-width="2" fill="#F6F6F6" fill-rule="evenodd" xlink:href="#path-10"></use>
+                    </g>
+                    <g id="Oval-2">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-14)" xlink:href="#path-13"></use>
+                        <use stroke="#979797" stroke-width="1" fill="#F7F1F1" fill-rule="evenodd" xlink:href="#path-13"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

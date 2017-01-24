@@ -70,10 +70,10 @@ class Lasertank extends React.Component {
           <Rectangle
             key={ `${colIdx}-${rowIdx}` }
             object={ el }
-            x={ colIdx * 40 }
-            y={ rowIdx * 40 }
-            w={ 40 }
-            h={ 40 }
+            x={ colIdx * 120 }
+            y={ rowIdx * 120 }
+            w={ 120 }
+            h={ 120 }
             laserOver={ laserOver } />
         );
       });
@@ -84,10 +84,10 @@ class Lasertank extends React.Component {
         <Rectangle
           key={ `laser` }
           object={ 'L' }
-          x={ laser.x * 40 + 15 }
-          y={ laser.y * 40 + 15 }
-          w={ 10 }
-          h={ 10 } />
+          x={ laser.x * 120 + 40 }
+          y={ laser.y * 120 + 40 }
+          w={ 40 }
+          h={ 40 } />
       );
     }
 

@@ -6,16 +6,16 @@ import rootReducer from '../reducers/rootReducer';
 const _testState = {
   game: {
     board: [
-      [null,null,null,null,null,null,null,null,null,null],
-      [null,'T',null,null,null,null,null,null,null,null],
-      [null,null,null,null,null,null,null,null,null,null],
-      [null,null,null,null,null,null,null,null,null,null],
-      [null,null,null,null,null,null,null,null,null,null],
-      [null,null,'M','M',null,null,null,null,null,null],
-      [null,null,'M',null,null,null,null,null,null,null],
-      [null,null,null,null,null,null,'S','S','S','S'],
-      [null,null,null,'W','W','W','W','S','F',null],
-      [null,null,null,null,null,null,null,null,null,null]],
+      ['S','S','S','S','S','S','S','S','S','S'],
+      [null,null,'S','S','S','S','S',null,null,'T'],
+      ['W','W','W','W',null,null,null,'M','M',null],
+      ['W','S','S','S','S',null,'S',null,'M',null],
+      ['W','S','S','S','S',null,'S',null,'M',null],
+      ['W','S','S',null,'M',null,'S','M',null,null],
+      ['W','S','S',null,null,'M','S',null,'M',null],
+      ['W','S','S',null,'M',null,null,'M',null,null],
+      ['W','F','S',null,null,'S','S',null,null,null],
+      ['S','S','S','S','S','S','S','S','S','S']],
     laser: {
       x: null,
       y: null,

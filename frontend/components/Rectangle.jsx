@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Sprites from '../lib/sprites';
 
 const propTypes = {
   ctx: React.PropTypes.instanceOf(CanvasRenderingContext2D),
@@ -34,34 +35,28 @@ class Rectangle extends React.Component {
     this.clearSelf();
 
     const { ctx, object, x, y, w, h, laserOver } = this.props;
-    let color;
 
+    Sprites.drawGround(ctx, x, y, w, h);
     switch (object) {
       case 'S':
-        color = '#5A5A5A';
+        Sprites.drawSolidBlock(ctx, x, y, w, h);
         break;
       case 'T':
-        color = '#B86C99';
+        Sprites.drawTank(ctx, x, y, w, h);
         break;
       case 'F':
-        color = '#9068BE';
+        Sprites.drawFlag(ctx, x, y, w, h);
         break;
       case 'M':
-        color = '#FF5A09';
+        Sprites.drawMovableBlock(ctx, x, y, w, h);
         break;
       case 'W':
-        color = '#92B4F4';
+        Sprites.drawWater(ctx, x, y, w, h);
         break;
       case 'L':
-        color = '#F45B69';
-        break;
-      default:
-        color = '#F4FFE8';
+        Sprites.drawLaser(ctx, x, y, w, h);
         break;
     }
-    console.log(x, y, object, laserOver);
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, w, h);
 
     return null;
   }
