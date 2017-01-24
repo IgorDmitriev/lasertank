@@ -14,8 +14,26 @@ class Rectangle extends React.Component {
     super(props);
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return (this.props.object !== nextProps.object ||
+            this.props.x !== nextProps.x ||
+            this.props.y !== nextProps.y ||
+            this.props.laserOver !== nextProps.laserOver);
+  }
+
+  clearSelf (){
+    const { ctx, x, y, w, h } = this.props;
+    ctx.clearRect(x, y, w, h);
+  }
+
+  componentWillUnmount(){
+    // this.clearSelf();
+  }
+
   render () {
-    const { ctx, object, x, y, w, h } = this.props;
+    this.clearSelf();
+
+    const { ctx, object, x, y, w, h, laserOver } = this.props;
     let color;
 
     switch (object) {
@@ -38,9 +56,10 @@ class Rectangle extends React.Component {
         color = '#F45B69';
         break;
       default:
-        return null;
+        color = '#F4FFE8';
+        break;
     }
-
+    console.log(x, y, object, laserOver);
     ctx.fillStyle = color;
     ctx.fillRect(x, y, w, h);
 

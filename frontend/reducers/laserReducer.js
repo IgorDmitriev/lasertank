@@ -15,18 +15,15 @@ const _nullLaser = {
 
 const boardReducer = (state = _nullLaser, action) => {
   deepFreeze(state);
+  const board = action.board ? deepDupBoard(action.board) : null;
 
   switch (action.type) {
     case MOVE_LASER:
-      let { x, y, dx, dy } = action;
-      return tryToMoveLaser(x, y, dx, dy);
+      var { x, y, dx, dy } = action;
+      return tryToMoveLaser(board, x, y, dx, dy);
     case MOVE_LASER_FORWARD:
-      let x1 = state.x;
-      let y1 = state.y;
-      let dx1 = state.dx;
-      let dy1 = state.dy;
-
-      return tryToMoveLaser(x1, y1, dx1, dy1);
+      var { x, y, dx, dy } = state;
+      return tryToMoveLaser(board, x, y, dx, dy);
     default:
       return state;
   }

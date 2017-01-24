@@ -3,7 +3,7 @@ import deepFreeze from 'deep-freeze';
 import { MOVE_TANK } from '../actions/boardActions';
 import { tryToMoveTank, deepDupBoard } from '../lib/board';
 
-const boardReducer = (state = [], action) => {
+const boardReducer = (state = [[]], action) => {
   deepFreeze(state);
   const board = deepDupBoard(state);
 

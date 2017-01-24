@@ -25,7 +25,7 @@ class Game extends React.Component {
   }
 
   render(){
-    this.state.ctx && this.state.ctx.clearRect(0, 0, 400, 400);
+    // this.state.ctx && this.state.ctx.clearRect(0, 0, 400, 400);
 
     return (
       <canvas id="board" width="400" height="400">

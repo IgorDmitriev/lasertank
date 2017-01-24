@@ -18,11 +18,11 @@ const mapDispatchToProps = dispatch => {
     moveDown: () => dispatch(moveDown()),
     moveLeft: () => dispatch(moveLeft()),
     moveRight: () => dispatch(moveRight()),
-    shootUp: (x, y) => dispatch(shootUp(x, y)),
-    shootDown: (x, y) => dispatch(shootDown(x, y)),
-    shootLeft: (x, y) => dispatch(shootLeft(x, y)),
-    shootRight: (x, y) => dispatch(shootRight(x, y)),
-    moveLaserForward: () => dispatch(moveLaserForward())
+    shootUp: (board, x, y) => dispatch(shootUp(board, x, y)),
+    shootDown: (board, x, y) => dispatch(shootDown(board, x, y)),
+    shootLeft: (board, x, y) => dispatch(shootLeft(board, x, y)),
+    shootRight: (board, x, y) => dispatch(shootRight(board, x, y)),
+    moveLaserForward: (board) => dispatch(moveLaserForward(board))
   };
 };
 

@@ -5,11 +5,11 @@ const _nullLaser = {
     dy: null
 };
 
-export const deepDupBoard = (board) => (
-  board.map(row => (
-    [...row].map( el => el && el.slice())
-  ))
-);
+export const deepDupBoard = (board) => {
+  return board.map(row => (
+      [...row].map( el => el && el.slice())
+    ));
+};
 
 export const findTank = board => {
   let tankX, tankY;
@@ -53,13 +53,22 @@ export const tryToMoveTank = (board, dx, dy) => {
   return board;
 };
 
-export const tryToMoveLaser = (x, y, dx, dy) => {
+export const tryToMoveLaser = (board, x, y, dx, dy) => {
   if (!inBoardPos(x, y, dx, dy)) return _nullLaser;
-  console.log('in board!');
-  return {
-    x: x + dx,
-    y: y + dy,
-    dx,
-    dy
-  };
+
+  const nextPosObj = board[y + dy][x + dx];
+
+  switch (nextPosObj) {
+    case 'S':
+      return _nullLaser;
+    default:
+      return {
+        x: x + dx,
+        y: y + dy,
+        dx,
+        dy
+      };
+  }
+
+
 };

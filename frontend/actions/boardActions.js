@@ -26,38 +26,43 @@ export const moveLeft = () => ({
   dy: 0
 });
 
-export const shootUp = (x, y) => ({
+export const shootUp = (board, x, y) => ({
   type: MOVE_LASER,
+  board,
   x,
   y,
   dx: 0,
   dy: -1
 });
 
-export const shootDown = (x, y) => ({
+export const shootDown = (board, x, y) => ({
   type: MOVE_LASER,
+  board,
   x,
   y,
   dx: 0,
   dy: 1
 });
 
-export const shootRight = (x, y) => ({
+export const shootRight = (board, x, y) => ({
   type: MOVE_LASER,
+  board,
   x,
   y,
   dx: 1,
   dy: 0
 });
 
-export const shootLeft = (x, y) => ({
+export const shootLeft = (board, x, y) => ({
   type: MOVE_LASER,
+  board,
   x,
   y,
   dx: -1,
   dy: 0
 });
 
-export const moveLaserForward = () => ({
-  type: MOVE_LASER_FORWARD
+export const moveLaserForward = (board) => ({
+  type: MOVE_LASER_FORWARD,
+  board
 });
