@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import Lasertank from './Lasertank';
+import Lasertank from './LasertankContainer';
 
 const Root = ({ store }) => (
   <Provider store={ store }>

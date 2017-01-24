@@ -11,7 +11,6 @@ class Game extends React.Component {
 
   componentDidMount() {
     const c = document.getElementById("board");
-    console.log(c);
     const ctx = c.getContext("2d");
 
     this.setState({ ctx });
