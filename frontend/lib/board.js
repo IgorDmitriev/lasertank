@@ -63,6 +63,10 @@ export const tryToMoveMovableBlock = (board, x, y, dx, dy) => {
       board[y + dy][x + dx] = 'M';
       board[y][x] = null;
       break;
+    case 'W':
+      board[y + dy][x + dx] = null;
+      board[y][x] = null;
+      break;
     default:
       break;
   }
@@ -71,22 +75,33 @@ export const tryToMoveMovableBlock = (board, x, y, dx, dy) => {
 };
 
 export const tryToMoveLaser = (board, x, y, dx, dy) => {
-  if (!inBoardPos(x, y, dx, dy)) return _nullLaser;
+  if (!inBoardPos(x, y, dx, dy)) return { board, laser: _nullLaser};
 
   const nextPosObj = board[y + dy][x + dx];
 
   switch (nextPosObj) {
     case 'S':
-      return _nullLaser;
-    case 'M':
-      tryToMoveMovableBlock(board, x + dx, y + dy, dx, dy);
-      return _nullLaser;
-    default:
       return {
+        board,
+        laser: _nullLaser
+      };
+    case 'M':
+      let newBoard = tryToMoveMovableBlock(board, x + dx, y + dy, dx, dy);
+      return {
+        board: newBoard,
+        laser: _nullLaser
+      };
+    default:
+      const newLaser = {
         x: x + dx,
         y: y + dy,
         dx,
         dy
+      };
+
+      return {
+        board,
+        laser: newLaser
       };
   }
 

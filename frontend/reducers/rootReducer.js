@@ -1,8 +1,6 @@
 import { combineReducers } from 'redux';
-import board from './boardReducer';
-import laser from './laserReducer';
+import game from './gameReducer';
 
 export default combineReducers({
-  board,
-  laser
+  game
 });

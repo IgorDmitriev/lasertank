@@ -7,8 +7,8 @@ import {
 
 const mapStateToProps = state => {
   return {
-    board: state.board,
-    laser: state.laser
+    board: state.game.board,
+    laser: state.game.laser
   };
 };
 
