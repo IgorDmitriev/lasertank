@@ -50,7 +50,7 @@ class Lasertank extends React.Component {
   componentDidUpdate () {
     const { laser, board } = this.props;
     if (laser && laser.x !== null && laser.y !== null) {
-      setTimeout(this.props.moveLaserForward.bind(null, board), 100);
+      setTimeout(this.props.moveLaserForward.bind(null, board), 50);
     }
   }
 
@@ -84,10 +84,10 @@ class Lasertank extends React.Component {
         <Rectangle
           key={ `laser` }
           object={ 'L' }
-          x={ laser.x * 40 + 10 }
-          y={ laser.y * 40 + 10 }
-          w={ 20 }
-          h={ 20 } />
+          x={ laser.x * 40 + 15 }
+          y={ laser.y * 40 + 15 }
+          w={ 10 }
+          h={ 10 } />
       );
     }
 

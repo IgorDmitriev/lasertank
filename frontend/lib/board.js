@@ -53,6 +53,23 @@ export const tryToMoveTank = (board, dx, dy) => {
   return board;
 };
 
+export const tryToMoveMovableBlock = (board, x, y, dx, dy) => {
+  if (!inBoardPos(x, y, dx, dy)) return board;
+
+  const nextPosObj = board[y + dy][x + dx];
+
+  switch (nextPosObj) {
+    case null:
+      board[y + dy][x + dx] = 'M';
+      board[y][x] = null;
+      break;
+    default:
+      break;
+  }
+
+  return board;
+};
+
 export const tryToMoveLaser = (board, x, y, dx, dy) => {
   if (!inBoardPos(x, y, dx, dy)) return _nullLaser;
 
@@ -60,6 +77,9 @@ export const tryToMoveLaser = (board, x, y, dx, dy) => {
 
   switch (nextPosObj) {
     case 'S':
+      return _nullLaser;
+    case 'M':
+      tryToMoveMovableBlock(board, x + dx, y + dy, dx, dy);
       return _nullLaser;
     default:
       return {
@@ -69,6 +89,8 @@ export const tryToMoveLaser = (board, x, y, dx, dy) => {
         dy
       };
   }
+
+
 
 
 };

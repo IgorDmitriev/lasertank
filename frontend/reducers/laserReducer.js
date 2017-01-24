@@ -13,7 +13,7 @@ const _nullLaser = {
     dy: null
 };
 
-const boardReducer = (state = _nullLaser, action) => {
+const laserReducer = (state = _nullLaser, action) => {
   deepFreeze(state);
   const board = action.board ? deepDupBoard(action.board) : null;
 
@@ -29,4 +29,4 @@ const boardReducer = (state = _nullLaser, action) => {
   }
 };
 
-export default boardReducer;
+export default laserReducer;
