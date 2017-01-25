@@ -25,8 +25,6 @@ class Game extends React.Component {
   }
 
   render(){
-    // this.state.ctx && this.state.ctx.clearRect(0, 0, 400, 400);
-
     return (
       <canvas id="board" width="1200px" height="1200px">
         { this.state.ctx ? this.mapChildren() : [] }

@@ -1,4 +1,4 @@
-#game {
+.game {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -8,4 +8,24 @@ canvas {
   border: 2px solid #666;
   width: 600px;
   height: 600px;
+}
+
+.game-control, .level-status {
+  margin: 0px 50px;
+}
+
+.level-status div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: level-status
+}
+
+.level-number-label, .level-author-label,
+.level-moves-label, .level-shots-label {
+  width: 102px;
+  height: 22px;
+  background-color: #9b9b9b;
+  box-shadow: 1px 2px 1px 0 rgba(0, 0, 0, 0.5);
+  border: solid 1px #979797;
 }

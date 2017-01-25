@@ -1,6 +1,17 @@
 export const MOVE_TANK = 'MOVE_TANK';
 export const MOVE_LASER = 'MOVE_LASER';
 export const MOVE_LASER_FORWARD = 'MOVE_LASER_FORWARD';
+export const RESET_LEVEL = 'RESET_LEVEL';
+export const SET_LEVEL = 'SET_LEVEL';
+
+export const setLevel = (levelNumber) => ({
+  type: SET_LEVEL,
+  levelNumber
+});
+
+export const resetLevel = () => ({
+  type: RESET_LEVEL
+});
 
 export const moveUp = () => ({
   type: MOVE_TANK,
