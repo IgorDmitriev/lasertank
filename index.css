@@ -14,6 +14,14 @@ canvas {
   margin: 0px 50px;
 }
 
+.game-control div {
+  cursor: pointer;
+}
+
+.game-control div:hover {
+  background-color: #666;
+}
+
 .level-status div {
   display: flex;
   flex-direction: row;

@@ -32,6 +32,8 @@ export const tryToMoveTank = (board, dx, dy) => {
   if (!inBoardPos(tankX, tankY, dx, dy)) return board;
 
   const nextPosObj = board[tankY + dy][tankX + dx];
+  let gameOver = false,
+      won = false;
 
   switch (nextPosObj) {
     case 'S':
@@ -40,9 +42,11 @@ export const tryToMoveTank = (board, dx, dy) => {
       break;
     case 'W':
       console.log('Game Over!');
+      gameOver = true;
       break;
     case 'F':
       console.log('You Won!');
+      won = true;
       break;
     default:
       board[tankY + dy][tankX + dx] = 'T';
@@ -50,7 +54,13 @@ export const tryToMoveTank = (board, dx, dy) => {
       break;
   }
 
-  return board;
+  return {
+    board: {
+      present: board
+    },
+    gameOver,
+    won
+  };
 };
 
 export const tryToMoveMovableBlock = (board, x, y, dx, dy) => {
@@ -82,13 +92,17 @@ export const tryToMoveLaser = (board, x, y, dx, dy) => {
   switch (nextPosObj) {
     case 'S':
       return {
-        board,
+        board: {
+          present: board
+        },
         laser: _nullLaser
       };
     case 'M':
       let newBoard = tryToMoveMovableBlock(board, x + dx, y + dy, dx, dy);
       return {
-        board: newBoard,
+        board: {
+          present: newBoard
+        },
         laser: _nullLaser
       };
     default:
@@ -100,7 +114,9 @@ export const tryToMoveLaser = (board, x, y, dx, dy) => {
       };
 
       return {
-        board,
+        board: {
+          present: board
+        },
         laser: newLaser
       };
   }

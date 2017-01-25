@@ -3,6 +3,11 @@ export const MOVE_LASER = 'MOVE_LASER';
 export const MOVE_LASER_FORWARD = 'MOVE_LASER_FORWARD';
 export const RESET_LEVEL = 'RESET_LEVEL';
 export const SET_LEVEL = 'SET_LEVEL';
+export const UNDO = 'UNDO';
+
+export const undo = () => ({
+  type: UNDO
+});
 
 export const setLevel = (levelNumber) => ({
   type: SET_LEVEL,
@@ -73,7 +78,6 @@ export const shootLeft = (board, x, y) => ({
   dy: 0
 });
 
-export const moveLaserForward = (board) => ({
-  type: MOVE_LASER_FORWARD,
-  board
+export const moveLaserForward = () => ({
+  type: MOVE_LASER_FORWARD
 });

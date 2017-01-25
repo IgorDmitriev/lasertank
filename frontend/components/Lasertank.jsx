@@ -11,15 +11,17 @@ class Lasertank extends React.Component {
   }
 
   componentDidMount () {
-    this.props.setLevel(0);
+    this.props.setLevel(1);
+    console.log(this.props);
     window.addEventListener("keydown", (e) => {
       const { laser, board } = this.props;
-      if (laser && laser.x !== null && laser.y !== null) {
+      if (laser && laser.x && laser.y) {
+        console.log('Can not move while laser on board!');
         return null;
       }
       if (!board) return null;
 
-      const { tankX, tankY } = findTank(this.props.board);
+      const { tankX, tankY } = findTank(board);
       switch (e.keyCode) {
         case 65:
           this.props.shootLeft(board, tankX, tankY);
@@ -51,8 +53,12 @@ class Lasertank extends React.Component {
 
   componentDidUpdate () {
     const { laser, board } = this.props;
-    if (laser && laser.x !== null && laser.y !== null) {
-      setTimeout(this.props.moveLaserForward.bind(null, board), 50);
+    if (laser && laser.x && laser.y) {
+      setTimeout(this.props.moveLaserForward, 50);
+    }
+
+    if (this.props.won) {
+      this.props.setLevel(this.props.levelNumber + 1);
     }
   }
 
@@ -115,7 +121,9 @@ class Lasertank extends React.Component {
             onClick={ this.props.setLevel.bind(null, this.props.levelNumber - 1)}>
             Prev Level
           </div>
-          <div className="reset-button">
+          <div
+            className="undo-button"
+            onClick={ this.props.undo }>
             Undo
           </div>
         </div>
@@ -127,13 +135,14 @@ class Lasertank extends React.Component {
             Level Number
           </div>
           <div className="level-number-value">
-            { this.props.levelNumber + 1 }
+            { this.props.levelNumber }
           </div>
           <div className="level-author-label">
             Author
           </div>
           <div className="level-author-value">
-            Igor
+            { this.props.gameOver.toString() }
+            { this.props.won.toString() }
           </div>
           <div className="level-moves-label">
             Moves
