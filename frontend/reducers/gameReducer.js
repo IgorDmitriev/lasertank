@@ -52,11 +52,11 @@ const gameReducer = (state = _nullState, action) => {
           present: state.levels[action.levelNumber].initialBoard
         },
         levelNumber: action.levelNumber,
+        levelDifficulty: state.levels[action.levelNumber].difficulty,
         gameOver: false,
         won: false
       };
     case RESET_LEVEL:
-      console.log(state);
       return {
         ...state,
         board: {

@@ -13,7 +13,8 @@ const mapStateToProps = state => {
     levelNumber: state.game.levelNumber,
     score: state.score,
     gameOver: state.game.gameOver,
-    won: state.game.won
+    won: state.game.won,
+    levelDifficulty: state.game.levelDifficulty
   };
 };
 

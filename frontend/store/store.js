@@ -88,6 +88,7 @@ const _testState = {
       }
     },
     levelNumber: 1,
+    levelDifficulty: "Medium",
     gameOver: false,
     won: false
   },

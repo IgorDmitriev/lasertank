@@ -76,7 +76,6 @@ class Lasertank extends React.Component {
           dx = pos[0] - tankX;
           dy = pos[1] - tankY;
           [tankX, tankY] = pos;
-          console.log(dx, dy);
           this.props.moveTank(dx, dy);
           this.moving = false;
         }, 100*idx);
@@ -86,23 +85,22 @@ class Lasertank extends React.Component {
 
     canvas.addEventListener('contextmenu', e => {
       e.preventDefault();
+
       const { laser, board } = this.props;
       if (laser && laser.x && laser.y) {
         console.log('Can not shoot while laser on board!');
         return null;
       }
-      console.log('moving', this.moving);
+
       if (this.moving) {
         console.log('Can not shoot while moving');
         return null;
       }
       const x = Math.floor(e.layerX / 60);
       const y = Math.floor(e.layerY / 60);
-
       const { tankX, tankY } = findTank(this.props.board);
       let dx = tankX - x;
       let dy = tankY - y;
-      console.log(dx, dy);
       if (Math.abs(dx) < Math.abs(dy)) {
         if (dy > 0) {
           this.props.shootUp(board, tankX, tankY);
@@ -131,7 +129,6 @@ class Lasertank extends React.Component {
   }
 
   generateTiles () {
-    console.log('Going to render tiles');
     const { laser, board } = this.props;
     const tiles = [];
 
@@ -160,10 +157,10 @@ class Lasertank extends React.Component {
         <Rectangle
           key={ `laser` }
           object={ 'L' }
-          x={ laser.x * 120 + 40 }
-          y={ laser.y * 120 + 40 }
-          w={ 40 }
-          h={ 40 } />
+          x={ laser.x * 120 }
+          y={ laser.y * 120 }
+          w={ 20 }
+          h={ 20 } />
       );
     }
 
@@ -172,57 +169,61 @@ class Lasertank extends React.Component {
 
   render () {
     return (
-      <div className="game">
-        <div className="game-control">
-          <button
-            className="reset-button"
-            onClick={ this.props.resetLevel }>
-            Reset
-          </button>
-          <button
-            className="next-button"
-            onClick={ this.props.setLevel.bind(null, this.props.levelNumber + 1)}>
-            Next Level
-          </button>
-          <button
-            className="prev-button"
-            onClick={ this.props.setLevel.bind(null, this.props.levelNumber - 1)}>
-            Prev Level
-          </button>
-          <button
-            className="undo-button"
-            onClick={ this.props.undo }>
-            Undo
-          </button>
+      <div className="main">
+        <div className='header'>
+          <span className='logo'>LaserTank</span>
         </div>
-        <Game>
-          { this.generateTiles() }
-        </Game>
-        <div className="level-status">
-          <div className="level-number-label">
-            Level Number
+        <div className="game">
+          <div className="game-control">
+            <button
+              className="reset-button"
+              onClick={ this.props.resetLevel }>
+              Reset
+            </button>
+            <button
+              className="next-button"
+              onClick={ this.props.setLevel.bind(null, this.props.levelNumber + 1)}>
+              Next Level
+            </button>
+            <button
+              className="prev-button"
+              onClick={ this.props.setLevel.bind(null, this.props.levelNumber - 1)}>
+              Prev Level
+            </button>
+            <button
+              className="undo-button"
+              onClick={ this.props.undo }>
+              Undo
+            </button>
           </div>
-          <div className="level-number-value">
-            { this.props.levelNumber }
-          </div>
-          <div className="level-author-label">
-            Author
-          </div>
-          <div className="level-author-value">
-            { this.props.gameOver.toString() }
-            { this.props.won.toString() }
-          </div>
-          <div className="level-moves-label">
-            Moves
-          </div>
-          <div className="level-moves-value">
-            { this.props.score.moves }
-          </div>
-          <div className="level-shots-label">
-            Shots
-          </div>
-          <div className="level-shots-value">
-            { this.props.score.shots }
+          <Game>
+            { this.generateTiles() }
+          </Game>
+          <div className="level-status">
+            <div className="level-number-label">
+              Level Number
+            </div>
+            <div className="level-number-value">
+              { this.props.levelNumber }
+            </div>
+            <div className="level-difficulty-label">
+              Difficulty
+            </div>
+            <div className="level-author-value">
+              { this.props.levelDifficulty }
+            </div>
+            <div className="level-moves-label">
+              Moves
+            </div>
+            <div className="level-moves-value">
+              { this.props.score.moves }
+            </div>
+            <div className="level-shots-label">
+              Shots
+            </div>
+            <div className="level-shots-value">
+              { this.props.score.shots }
+            </div>
           </div>
         </div>
       </div>

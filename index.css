@@ -1,3 +1,29 @@
+input, button, button:active, select:focus, select {
+  padding: 0px;
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.header {
+  /*width: 100%;*/
+  margin: 10px;
+}
+.logo {
+  display: block;
+  font-family: Lato;
+  font-size: 36px;
+  letter-spacing: -1;
+}
+
 .game {
   display: flex;
   flex-direction: row;
@@ -13,6 +39,7 @@ canvas {
 .game-control, .level-status {
   margin: 0px 50px;
 }
+
 .game-control {
   display: flex;
   flex-direction: column;
@@ -20,24 +47,43 @@ canvas {
 
 .game-control button {
   cursor: pointer;
+  background-color: transparent;
+  padding: 5px 20px;
+  margin: 10px 0;
+  font-size: 14px;
+  font-family: Lato;
 }
 
 .game-control button:hover {
-  /*background-color: #666;*/
+  background-color: rgba(207,222,231, 0.5);
+  border-radius: 2px;
+  box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.game-control button:active{
+  background-color: rgba(207,222,231, 0.5);
+  border-radius: 2px;
+  box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .level-status div {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: level-status
+  align-items: center;
+  font-family: Lato;
+  margin-bottom: 10px;
 }
 
-.level-number-label, .level-author-label,
+.level-number-label, .level-difficulty-label,
 .level-moves-label, .level-shots-label {
   width: 102px;
   height: 22px;
-  background-color: #9b9b9b;
-  box-shadow: 1px 2px 1px 0 rgba(0, 0, 0, 0.5);
-  border: solid 1px #979797;
+  background-color: #747E80;
+  padding: 5px 20px;
+  box-shadow: 2px 2px 1px 0 rgba(0, 0, 0, 0.75);
+  color: #fff;
+  text-shadow: 0 0 1px #000;
+
+  /*border: solid 1px #979797;*/
 }

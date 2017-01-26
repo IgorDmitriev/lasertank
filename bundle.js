@@ -21556,6 +21556,7 @@
 	      }
 	    },
 	    levelNumber: 1,
+	    levelDifficulty: "Medium",
 	    gameOver: false,
 	    won: false
 	  },
@@ -24265,7 +24266,8 @@
 	    levelNumber: state.game.levelNumber,
 	    score: state.score,
 	    gameOver: state.game.gameOver,
-	    won: state.game.won
+	    won: state.game.won,
+	    levelDifficulty: state.game.levelDifficulty
 	  };
 	};
 	
@@ -24448,7 +24450,6 @@
 	            tankX = _pos[0];
 	            tankY = _pos[1];
 	
-	            console.log(dx, dy);
 	            _this2.props.moveTank(dx, dy);
 	            _this2.moving = false;
 	          }, 100 * idx);
@@ -24457,6 +24458,7 @@
 	
 	      canvas.addEventListener('contextmenu', function (e) {
 	        e.preventDefault();
+	
 	        var _props3 = _this2.props,
 	            laser = _props3.laser,
 	            board = _props3.board;
@@ -24465,7 +24467,7 @@
 	          console.log('Can not shoot while laser on board!');
 	          return null;
 	        }
-	        console.log('moving', _this2.moving);
+	
 	        if (_this2.moving) {
 	          console.log('Can not shoot while moving');
 	          return null;
@@ -24479,7 +24481,6 @@
 	
 	        var dx = tankX - x;
 	        var dy = tankY - y;
-	        console.log(dx, dy);
 	        if (Math.abs(dx) < Math.abs(dy)) {
 	          if (dy > 0) {
 	            _this2.props.shootUp(board, tankX, tankY);
@@ -24513,7 +24514,6 @@
 	  }, {
 	    key: 'generateTiles',
 	    value: function generateTiles() {
-	      console.log('Going to render tiles');
 	      var _props5 = this.props,
 	          laser = _props5.laser,
 	          board = _props5.board;
@@ -24542,10 +24542,10 @@
 	        tiles.push(_react2.default.createElement(_Rectangle2.default, {
 	          key: 'laser',
 	          object: 'L',
-	          x: laser.x * 120 + 40,
-	          y: laser.y * 120 + 40,
-	          w: 40,
-	          h: 40 }));
+	          x: laser.x * 120,
+	          y: laser.y * 120,
+	          w: 20,
+	          h: 20 }));
 	      }
 	
 	      return tiles;
@@ -24555,87 +24555,99 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'game' },
+	        { className: 'main' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'game-control' },
+	          { className: 'header' },
 	          _react2.default.createElement(
-	            'button',
-	            {
-	              className: 'reset-button',
-	              onClick: this.props.resetLevel },
-	            'Reset'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            {
-	              className: 'next-button',
-	              onClick: this.props.setLevel.bind(null, this.props.levelNumber + 1) },
-	            'Next Level'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            {
-	              className: 'prev-button',
-	              onClick: this.props.setLevel.bind(null, this.props.levelNumber - 1) },
-	            'Prev Level'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            {
-	              className: 'undo-button',
-	              onClick: this.props.undo },
-	            'Undo'
+	            'span',
+	            { className: 'logo' },
+	            'LaserTank'
 	          )
 	        ),
 	        _react2.default.createElement(
-	          _Game2.default,
-	          null,
-	          this.generateTiles()
-	        ),
-	        _react2.default.createElement(
 	          'div',
-	          { className: 'level-status' },
+	          { className: 'game' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'level-number-label' },
-	            'Level Number'
+	            { className: 'game-control' },
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'reset-button',
+	                onClick: this.props.resetLevel },
+	              'Reset'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'next-button',
+	                onClick: this.props.setLevel.bind(null, this.props.levelNumber + 1) },
+	              'Next Level'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'prev-button',
+	                onClick: this.props.setLevel.bind(null, this.props.levelNumber - 1) },
+	              'Prev Level'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'undo-button',
+	                onClick: this.props.undo },
+	              'Undo'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _Game2.default,
+	            null,
+	            this.generateTiles()
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'level-number-value' },
-	            this.props.levelNumber
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'level-author-label' },
-	            'Author'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'level-author-value' },
-	            this.props.gameOver.toString(),
-	            this.props.won.toString()
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'level-moves-label' },
-	            'Moves'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'level-moves-value' },
-	            this.props.score.moves
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'level-shots-label' },
-	            'Shots'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'level-shots-value' },
-	            this.props.score.shots
+	            { className: 'level-status' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-number-label' },
+	              'Level Number'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-number-value' },
+	              this.props.levelNumber
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-difficulty-label' },
+	              'Difficulty'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-author-value' },
+	              this.props.levelDifficulty
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-moves-label' },
+	              'Moves'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-moves-value' },
+	              this.props.score.moves
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-shots-label' },
+	              'Shots'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-shots-value' },
+	              this.props.score.shots
+	            )
 	          )
 	        )
 	      );
@@ -24901,11 +24913,11 @@
 	          present: state.levels[action.levelNumber].initialBoard
 	        },
 	        levelNumber: action.levelNumber,
+	        levelDifficulty: state.levels[action.levelNumber].difficulty,
 	        gameOver: false,
 	        won: false
 	      });
 	    case _boardActions.RESET_LEVEL:
-	      console.log(state);
 	      return _extends({}, state, {
 	        board: {
 	          past: [],
@@ -24960,7 +24972,7 @@
 	  value: true
 	});
 	var drawSolidBlock = exports.drawSolidBlock = function drawSolidBlock(ctx, x, y, w, h) {
-	  var color = '#9B9B9B';
+	  var color = '#A2A9AF';
 	
 	  ctx.fillStyle = color;
 	  ctx.fillRect(x, y, w, h);
@@ -24970,21 +24982,21 @@
 	  ctx.shadowBlur = 1;
 	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
 	
-	  color = '#4A4A4A';
+	  color = '#747E80';
 	  ctx.fillStyle = color;
 	  ctx.fillRect(x + 3, y + 3, w - 8, h - 8);
 	  clearShadows(ctx);
 	};
 	
 	var drawTank = exports.drawTank = function drawTank(ctx, x, y, w, h) {
-	  var color = '#9B9B9B';
+	  var color = '#A2A9AF';
 	  ctx.fillStyle = color;
 	  ctx.fillRect(x, y, w, h);
-	  ctx.shadowOffsetX = 4;
-	  ctx.shadowOffsetY = 4;
-	  ctx.shadowBlur = 20;
+	  ctx.shadowOffsetX = 2;
+	  ctx.shadowOffsetY = 2;
+	  ctx.shadowBlur = 1;
 	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  color = '#E5446D';
+	  color = '#009A31';
 	  ctx.beginPath();
 	  ctx.fillStyle = color;
 	  ctx.arc(x + 60, y + 60, 40, 0, 2 * Math.PI, false);
@@ -24993,15 +25005,24 @@
 	};
 	
 	var drawFlag = exports.drawFlag = function drawFlag(ctx, x, y, w, h) {
-	  var color = '#FFF000';
-	  ctx.shadowOffsetX = 4;
-	  ctx.shadowOffsetY = 4;
-	  ctx.shadowBlur = 20;
+	  var color = '#E5446D';
+	  ctx.shadowOffsetX = 2;
+	  ctx.shadowOffsetY = 2;
+	  ctx.shadowBlur = 5;
 	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  ctx.beginPath();
+	  // ctx.beginPath();
 	  ctx.fillStyle = color;
-	  ctx.arc(x + 60, y + 60, 40, 0, 2 * Math.PI, false);
+	  // ctx.arc(x + 60, y + 60, 40, 0, 2 * Math.PI, false);
+	  // ctx.fill();
+	  ctx.fillRect(x + 25, y + 20, 5, 90);
+	  ctx.beginPath();
+	  ctx.moveTo(x + 35, y + 25);
+	  ctx.lineTo(x + 95, y + 25);
+	  ctx.lineTo(x + 75, y + 45);
+	  ctx.lineTo(x + 95, y + 65);
+	  ctx.lineTo(x + 35, y + 65);
 	  ctx.fill();
+	
 	  clearShadows(ctx);
 	};
 	
@@ -25010,9 +25031,12 @@
 	  ctx.shadowOffsetY = 1;
 	  ctx.shadowBlur = 2;
 	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  var color = "#E5446D";
+	  var color = "#009A31";
+	  // ctx.fillRect(x, y, w, h);
+	  ctx.beginPath();
 	  ctx.fillStyle = color;
-	  ctx.fillRect(x, y, w, h);
+	  ctx.arc(x + 60, y + 60, w, 0, 2 * Math.PI, false);
+	  ctx.fill();
 	  clearShadows(ctx);
 	};
 	
@@ -25021,14 +25045,14 @@
 	  ctx.shadowOffsetY = 2;
 	  ctx.shadowBlur = 10;
 	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  var color = '#F48B31';
+	  var color = '#EDAA53';
 	  ctx.fillStyle = color;
 	  ctx.fillRect(x + 10, y + 10, w - 20, h - 20);
 	  clearShadows(ctx);
 	};
 	
 	var drawGround = exports.drawGround = function drawGround(ctx, x, y, w, h) {
-	  var color = '#9B9B9B';
+	  var color = '#A2A9AF';
 	  ctx.fillStyle = color;
 	  ctx.fillRect(x, y, w, h);
 	};
@@ -25036,11 +25060,11 @@
 	var drawWater = exports.drawWater = function drawWater(ctx, x, y, w, h) {
 	  ctx.shadowOffsetX = 0;
 	  ctx.shadowOffsetY = 0;
-	  ctx.shadowBlur = 2;
+	  ctx.shadowBlur = 0;
 	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  var color = '#3E78B2';
+	  var color = '#1B6AA5';
 	  ctx.fillStyle = color;
-	  ctx.fillRect(x + 4, y + 4, w - 8, h - 8);
+	  ctx.fillRect(x, y, w, h);
 	  clearShadows(ctx);
 	};
 	
