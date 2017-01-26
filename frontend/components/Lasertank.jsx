@@ -157,10 +157,10 @@ class Lasertank extends React.Component {
         <Rectangle
           key={ `laser` }
           object={ 'L' }
-          x={ laser.x * 120 }
-          y={ laser.y * 120 }
-          w={ 20 }
-          h={ 20 } />
+          x={ laser.x * 120 + 40 }
+          y={ laser.y * 120 + 40 }
+          w={ 40 }
+          h={ 40 } />
       );
     }
 

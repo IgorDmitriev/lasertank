@@ -59,11 +59,12 @@ export const drawLaser = (ctx, x, y, w, h) => {
   ctx.shadowBlur = 2;
   ctx.shadowColor = "rgba(0, 0, 0, .75)";
   let color = "#009A31";
-  // ctx.fillRect(x, y, w, h);
   ctx.beginPath();
+  ctx.arc(x + 20, y + 20, w / 2, 0, 2 * Math.PI, false);
+  ctx.closePath();
   ctx.fillStyle = color;
-  ctx.arc(x + 60, y + 60, w, 0, 2 * Math.PI, false);
   ctx.fill();
+
   clearShadows(ctx);
 };
 
@@ -91,7 +92,7 @@ export const drawWater = (ctx, x, y, w, h) => {
   ctx.shadowColor = "rgba(0, 0, 0, .75)";
   let color = '#1B6AA5';
   ctx.fillStyle = color;
-  ctx.fillRect(x , y, w, h);
+  ctx.fillRect(x, y, w, h);
   clearShadows(ctx);
 };
 

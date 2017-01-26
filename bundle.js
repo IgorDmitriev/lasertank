@@ -67,6 +67,7 @@
 	document.addEventListener('DOMContentLoaded', function () {
 	  var store = (0, _store2.default)();
 	  var root = document.getElementById('root');
+	
 	  _reactDom2.default.render(_react2.default.createElement(_Root2.default, { store: store }), root);
 	});
 
@@ -21550,6 +21551,11 @@
 	        author: 'MCK'
 	      },
 	      4: {
+	        initialBoard: [[null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, 'T', null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null]],
+	        difficulty: 'Medium',
+	        author: 'MCK'
+	      },
+	      5: {
 	        initialBoard: [[null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null]],
 	        difficulty: 'Medium',
 	        author: 'MCK'
@@ -22868,7 +22874,7 @@
 	};
 	
 	var inBoardPos = exports.inBoardPos = function inBoardPos(x, y, dx, dy) {
-	  return -1 < x + dx && x + dx < 10 && -1 < y + dy && y + dy < 10;
+	  return x !== null && y !== null && dx !== null && dy !== null && -1 < x + dx && x + dx < 10 && -1 < y + dy && y + dy < 10;
 	};
 	
 	var tryToMoveTank = exports.tryToMoveTank = function tryToMoveTank(board, dx, dy) {
@@ -22972,7 +22978,6 @@
 	        dx: dx,
 	        dy: dy
 	      };
-	
 	      return {
 	        board: {
 	          present: board
@@ -24542,10 +24547,10 @@
 	        tiles.push(_react2.default.createElement(_Rectangle2.default, {
 	          key: 'laser',
 	          object: 'L',
-	          x: laser.x * 120,
-	          y: laser.y * 120,
-	          w: 20,
-	          h: 20 }));
+	          x: laser.x * 120 + 40,
+	          y: laser.y * 120 + 40,
+	          w: 40,
+	          h: 40 }));
 	      }
 	
 	      return tiles;
@@ -24799,13 +24804,11 @@
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      // this.clearSelf();
-	    }
+	    value: function componentWillUnmount() {}
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      this.clearSelf();
+	      // this.clearSelf();
 	
 	      var _props2 = this.props,
 	          ctx = _props2.ctx,
@@ -24817,18 +24820,21 @@
 	          laserOver = _props2.laserOver;
 	
 	
-	      Sprites.drawGround(ctx, x, y, w, h);
 	      switch (object) {
 	        case 'S':
+	          Sprites.drawGround(ctx, x, y, w, h);
 	          Sprites.drawSolidBlock(ctx, x, y, w, h);
 	          break;
 	        case 'T':
+	          Sprites.drawGround(ctx, x, y, w, h);
 	          Sprites.drawTank(ctx, x, y, w, h);
 	          break;
 	        case 'F':
+	          Sprites.drawGround(ctx, x, y, w, h);
 	          Sprites.drawFlag(ctx, x, y, w, h);
 	          break;
 	        case 'M':
+	          Sprites.drawGround(ctx, x, y, w, h);
 	          Sprites.drawMovableBlock(ctx, x, y, w, h);
 	          break;
 	        case 'W':
@@ -24836,6 +24842,9 @@
 	          break;
 	        case 'L':
 	          Sprites.drawLaser(ctx, x, y, w, h);
+	          break;
+	        default:
+	          Sprites.drawGround(ctx, x, y, w, h);
 	          break;
 	      }
 	
@@ -25032,11 +25041,12 @@
 	  ctx.shadowBlur = 2;
 	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
 	  var color = "#009A31";
-	  // ctx.fillRect(x, y, w, h);
 	  ctx.beginPath();
+	  ctx.arc(x + 20, y + 20, w / 2, 0, 2 * Math.PI, false);
+	  ctx.closePath();
 	  ctx.fillStyle = color;
-	  ctx.arc(x + 60, y + 60, w, 0, 2 * Math.PI, false);
 	  ctx.fill();
+	
 	  clearShadows(ctx);
 	};
 	

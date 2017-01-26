@@ -28,26 +28,28 @@ class Rectangle extends React.Component {
   }
 
   componentWillUnmount(){
-    // this.clearSelf();
   }
 
   render () {
-    this.clearSelf();
+    // this.clearSelf();
 
     const { ctx, object, x, y, w, h, laserOver } = this.props;
 
-    Sprites.drawGround(ctx, x, y, w, h);
     switch (object) {
       case 'S':
+        Sprites.drawGround(ctx, x, y, w, h);
         Sprites.drawSolidBlock(ctx, x, y, w, h);
         break;
       case 'T':
+        Sprites.drawGround(ctx, x, y, w, h);
         Sprites.drawTank(ctx, x, y, w, h);
         break;
       case 'F':
+        Sprites.drawGround(ctx, x, y, w, h);
         Sprites.drawFlag(ctx, x, y, w, h);
         break;
       case 'M':
+        Sprites.drawGround(ctx, x, y, w, h);
         Sprites.drawMovableBlock(ctx, x, y, w, h);
         break;
       case 'W':
@@ -55,6 +57,9 @@ class Rectangle extends React.Component {
         break;
       case 'L':
         Sprites.drawLaser(ctx, x, y, w, h);
+        break;
+      default:
+        Sprites.drawGround(ctx, x, y, w, h);
         break;
     }
 

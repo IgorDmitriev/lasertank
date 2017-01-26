@@ -25,6 +25,7 @@ export const findTank = board => {
 };
 
 export const inBoardPos = (x, y, dx, dy) => (
+  x !== null && y !== null && dx !== null && dy !== null &&
   -1 < (x + dx) && (x + dx) < 10 &&
   -1 < (y + dy) && (y + dy) < 10
 );
@@ -127,7 +128,6 @@ export const tryToMoveLaser = (board, x, y, dx, dy) => {
         dx,
         dy
       };
-
       return {
         board: {
           present: board

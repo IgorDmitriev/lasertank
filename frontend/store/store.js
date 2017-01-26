@@ -78,6 +78,22 @@ const _testState = {
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,'T',null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null]
+        ],
+        difficulty: 'Medium',
+        author: 'MCK'
+      },
+      5: {
+        initialBoard: [
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
