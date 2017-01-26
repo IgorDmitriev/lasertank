@@ -25,9 +25,6 @@ const _nullState = {
 };
 
 const gameReducer = (state = _nullState, action) => {
-  console.log(action);
-  console.log(state);
-
   deepFreeze(state);
   const board = deepDupBoard(state.board.present);
   const dupPast = state.board.past.slice();

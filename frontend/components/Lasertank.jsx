@@ -1,8 +1,8 @@
 import React from 'react';
-import { findTank } from '../lib/board';
-
+import { findTank, findPath } from '../lib/board';
 import Game from './Game';
 import Rectangle from './Rectangle';
+
 
 class Lasertank extends React.Component {
   constructor (props) {
@@ -12,10 +12,10 @@ class Lasertank extends React.Component {
 
   componentDidMount () {
     this.props.setLevel(1);
-    console.log(this.props);
+
     window.addEventListener("keydown", (e) => {
       const { laser, board } = this.props;
-      if (laser && laser.x && laser.y) {
+      if (laser && laser.x !== null && laser.y !== null) {
         console.log('Can not move while laser on board!');
         return null;
       }
@@ -49,11 +49,79 @@ class Lasertank extends React.Component {
           break;
       }
     });
+    const canvas = document.getElementById("board");
+    canvas.addEventListener('click', e => {
+      const x = Math.floor(e.layerX / 60);
+      const y = Math.floor(e.layerY / 60);
+      console.log('click:', x, y);
+
+      const { laser, board } = this.props;
+      if (laser && laser.x !== null && laser.y !== null) {
+        console.log('Can not move while laser on board!');
+        return null;
+      }
+
+      const moves = findPath(board, x, y);
+      if (moves.length === 0) {
+        console.log('Can not move there');
+        return;
+      }
+
+      let tankX = moves[0][0];
+      let tankY = moves[0][1];
+      let dx, dy;
+      moves.slice(1).forEach( (pos, idx) => {
+        setTimeout( () => {
+          this.moving = true;
+          dx = pos[0] - tankX;
+          dy = pos[1] - tankY;
+          [tankX, tankY] = pos;
+          console.log(dx, dy);
+          this.props.moveTank(dx, dy);
+          this.moving = false;
+        }, 100*idx);
+      });
+
+    });
+
+    canvas.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      const { laser, board } = this.props;
+      if (laser && laser.x && laser.y) {
+        console.log('Can not shoot while laser on board!');
+        return null;
+      }
+      console.log('moving', this.moving);
+      if (this.moving) {
+        console.log('Can not shoot while moving');
+        return null;
+      }
+      const x = Math.floor(e.layerX / 60);
+      const y = Math.floor(e.layerY / 60);
+
+      const { tankX, tankY } = findTank(this.props.board);
+      let dx = tankX - x;
+      let dy = tankY - y;
+      console.log(dx, dy);
+      if (Math.abs(dx) < Math.abs(dy)) {
+        if (dy > 0) {
+          this.props.shootUp(board, tankX, tankY);
+        } else {
+          this.props.shootDown(board, tankX, tankY);
+        }
+      } else {
+        if (dx < 0) {
+          this.props.shootRight(board, tankX, tankY);
+        } else {
+          this.props.shootLeft(board, tankX, tankY);
+        }
+      }
+    });
   }
 
   componentDidUpdate () {
     const { laser, board } = this.props;
-    if (laser && laser.x && laser.y) {
+    if (laser && laser.x !== null && laser.y !== null) {
       setTimeout(this.props.moveLaserForward, 50);
     }
 
@@ -106,26 +174,26 @@ class Lasertank extends React.Component {
     return (
       <div className="game">
         <div className="game-control">
-          <div
+          <button
             className="reset-button"
             onClick={ this.props.resetLevel }>
             Reset
-          </div>
-          <div
+          </button>
+          <button
             className="next-button"
             onClick={ this.props.setLevel.bind(null, this.props.levelNumber + 1)}>
             Next Level
-          </div>
-          <div
+          </button>
+          <button
             className="prev-button"
             onClick={ this.props.setLevel.bind(null, this.props.levelNumber - 1)}>
             Prev Level
-          </div>
-          <div
+          </button>
+          <button
             className="undo-button"
             onClick={ this.props.undo }>
             Undo
-          </div>
+          </button>
         </div>
         <Game>
           { this.generateTiles() }

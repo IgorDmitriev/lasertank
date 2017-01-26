@@ -1,3 +1,5 @@
+import PF from 'pathfinding';
+
 const _nullLaser = {
     x: null,
     y: null,
@@ -29,7 +31,13 @@ export const inBoardPos = (x, y, dx, dy) => (
 
 export const tryToMoveTank = (board, dx, dy) => {
   const { tankX, tankY} = findTank(board);
-  if (!inBoardPos(tankX, tankY, dx, dy)) return board;
+  if (!inBoardPos(tankX, tankY, dx, dy)) {
+    return {
+      board: {
+        present: board
+      }
+    };
+  }
 
   const nextPosObj = board[tankY + dy][tankX + dx];
   let gameOver = false,
@@ -85,7 +93,14 @@ export const tryToMoveMovableBlock = (board, x, y, dx, dy) => {
 };
 
 export const tryToMoveLaser = (board, x, y, dx, dy) => {
-  if (!inBoardPos(x, y, dx, dy)) return { board, laser: _nullLaser};
+  if (!inBoardPos(x, y, dx, dy)) {
+    return {
+      board: {
+        present: board
+      },
+      laser: _nullLaser
+    };
+  }
 
   const nextPosObj = board[y + dy][x + dx];
 
@@ -124,4 +139,28 @@ export const tryToMoveLaser = (board, x, y, dx, dy) => {
 
 
 
+};
+
+const buildMatrix = (board) => (
+  board.map( (row, rowIdx) => (
+    row.map( (el, colIdx) => {
+      switch (el) {
+        case null:
+        case 'T':
+        case 'F':
+          return 0;
+        default:
+          return 1;
+      }
+    })
+  ))
+);
+
+export const findPath = (board, x, y) => {
+  const { tankX, tankY } = findTank(board);
+  const matrix = buildMatrix(deepDupBoard(board));
+  const grid = new PF.Grid(matrix);
+  const finder = new PF.AStarFinder();
+  const path = finder.findPath(tankX, tankY, x, y, grid);
+  return path;
 };

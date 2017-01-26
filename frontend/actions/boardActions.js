@@ -5,6 +5,12 @@ export const RESET_LEVEL = 'RESET_LEVEL';
 export const SET_LEVEL = 'SET_LEVEL';
 export const UNDO = 'UNDO';
 
+export const moveTank = (dx, dy) => ({
+  type: MOVE_TANK,
+  dx,
+  dy
+});
+
 export const undo = () => ({
   type: UNDO
 });
@@ -40,6 +46,15 @@ export const moveLeft = () => ({
   type: MOVE_TANK,
   dx: -1,
   dy: 0
+});
+
+export const shootLaser = (board, x, y, dx, dy) => ({
+  type: MOVE_LASER,
+  board,
+  x,
+  y,
+  dx,
+  dy
 });
 
 export const shootUp = (board, x, y) => ({

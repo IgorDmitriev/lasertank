@@ -13,13 +13,17 @@ canvas {
 .game-control, .level-status {
   margin: 0px 50px;
 }
+.game-control {
+  display: flex;
+  flex-direction: column;
+}
 
-.game-control div {
+.game-control button {
   cursor: pointer;
 }
 
-.game-control div:hover {
-  background-color: #666;
+.game-control button:hover {
+  /*background-color: #666;*/
 }
 
 .level-status div {

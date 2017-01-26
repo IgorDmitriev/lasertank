@@ -3,7 +3,8 @@ import Lasertank from './Lasertank';
 import {
   moveUp, moveDown, moveRight, moveLeft,
   shootUp, shootDown, shootRight, shootLeft,
-  moveLaserForward, setLevel, resetLevel, undo } from '../actions/boardActions';
+  moveLaserForward, setLevel, resetLevel, undo,
+  moveTank, shootLaser } from '../actions/boardActions';
 
 const mapStateToProps = state => {
   return {
@@ -29,7 +30,9 @@ const mapDispatchToProps = dispatch => {
     moveLaserForward: () => dispatch(moveLaserForward()),
     setLevel: (levelNumber) => dispatch(setLevel(levelNumber)),
     resetLevel: () => dispatch(resetLevel()),
-    undo: () => dispatch(undo())
+    undo: () => dispatch(undo()),
+    moveTank: (dx, dy) => dispatch(moveTank(dx, dy)),
+    shootLaser: (board, x, y, dx, dy) => dispatch(shootLaser(board, x, y, dx, dy))
   };
 };
 
