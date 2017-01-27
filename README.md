@@ -178,5 +178,4 @@ if (Math.abs(dx) < Math.abs(dy)) {
     this.props.shootLeft(board, tankX, tankY);
   }
 }
-});
 ```
