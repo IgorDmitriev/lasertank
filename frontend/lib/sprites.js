@@ -37,10 +37,7 @@ export const drawFlag = (ctx, x, y, w, h) => {
   ctx.shadowOffsetY = 2;
   ctx.shadowBlur = 5;
   ctx.shadowColor = "rgba(0, 0, 0, .75)";
-  // ctx.beginPath();
   ctx.fillStyle = color;
-  // ctx.arc(x + 60, y + 60, 40, 0, 2 * Math.PI, false);
-  // ctx.fill();
   ctx.fillRect(x + 25, y + 20, 5, 90);
   ctx.beginPath();
   ctx.moveTo(x + 35, y + 25);

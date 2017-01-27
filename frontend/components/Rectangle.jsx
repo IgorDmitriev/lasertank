@@ -31,8 +31,6 @@ class Rectangle extends React.Component {
   }
 
   render () {
-    // this.clearSelf();
-
     const { ctx, object, x, y, w, h, laserOver } = this.props;
 
     switch (object) {
