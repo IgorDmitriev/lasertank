@@ -53,6 +53,7 @@ const gameReducer = (state = _nullState, action) => {
         },
         levelNumber: action.levelNumber,
         levelDifficulty: state.levels[action.levelNumber].difficulty,
+        levelMessage: state.levels[action.levelNumber].message,
         gameOver: false,
         won: false
       };

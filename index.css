@@ -1,3 +1,9 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #DDECEF;
+}
+
 input, button, button:active, select:focus, select {
   padding: 0px;
   border: none;
@@ -15,14 +21,34 @@ input, button, button:active, select:focus, select {
 }
 .header {
   /*width: 100%;*/
-  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
 }
 .logo {
   display: block;
   font-family: Lato;
   font-size: 36px;
-  letter-spacing: -1;
+  letter-spacing: -0.8px;
+  color: #333;
 }
+
+.sub-title {
+  font-size: 10px;
+}
+
+.sub-title a {
+  color: #000;
+  text-decoration: underline;
+}
+.sub-title a:hover {
+  color: #666;
+  text-decoration: underline;
+
+}
+
 
 .game {
   display: flex;
@@ -43,6 +69,7 @@ canvas {
 .game-control {
   display: flex;
   flex-direction: column;
+  width: 142px;
 }
 
 .game-control button {
@@ -66,6 +93,27 @@ canvas {
   box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
+.control-info {
+  margin-top: auto;
+  font-family: Lato;
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.control-info span {
+  margin: 0 10px;
+}
+
+.level-status {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .level-status div {
   display: flex;
   flex-direction: row;
@@ -76,7 +124,7 @@ canvas {
 }
 
 .level-number-label, .level-difficulty-label,
-.level-moves-label, .level-shots-label {
+.level-moves-label, .level-shots-label, .level-hint-label {
   width: 102px;
   height: 22px;
   background-color: #747E80;
@@ -86,4 +134,9 @@ canvas {
   text-shadow: 0 0 1px #000;
 
   /*border: solid 1px #979797;*/
+}
+
+.level-hint-value {
+  padding: 0px;
+  max-width: 140px;
 }

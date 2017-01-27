@@ -24,6 +24,108 @@ const _testState = {
     levels: {
       1: {
         initialBoard: [
+          [null,null,null,'S',null,null,null,null,null,null],
+          [null,'T',null,'S',null,null,null,null,null,null],
+          [null,null,null,'S',null,null,null,null,null,null],
+          ['S',null,'S','S',null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,'S','S',null,'S'],
+          [null,null,null,null,null,null,'S',null,null,null],
+          [null,null,null,null,null,null,'S',null,'F',null],
+          [null,null,null,null,null,null,'S',null,null,null]
+        ],
+        difficulty: 'Intro',
+        author: 'Igor',
+        message: 'You can move in four directions and fire a balls. Flag is the target that you must reach to end each level.'
+      },
+      2: {
+        initialBoard: [
+          [null,null,null,'W',null,null,null,null,null,null],
+          [null,'T',null,'W',null,null,null,null,null,null],
+          [null,null,null,'W',null,null,null,null,null,null],
+          ['W','M','W','W',null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,'W','W','W'],
+          [null,null,null,null,null,null,null,'W','F','W'],
+          [null,null,null,null,null,null,null,'W','W','W']
+        ],
+        difficulty: 'Intro',
+        author: 'Igor',
+        message: 'Orange block can be moved by being shot at with a ball. If it is pushed into water, it will form a bridge.'
+      },
+      3: {
+        initialBoard: [
+          ['W','W','W','W','W','W','W','W','W','W'],
+          ['W','W','W','W','W','W','W','W','W','W'],
+          ['W','W','W','W','W','W','W','W','W','W'],
+          ['W','W',null,null,null,null,null,null,'W','W'],
+          ['W','W',null,null,'W','W','M','W','W','W'],
+          ['W','W','T',null,'W','F','M','W','W','W'],
+          ['W','W',null,null,'W','W','W','W','W','W'],
+          ['W','W','W','W','W','W','W','W','W','W'],
+          ['W','W','W','W','W','W','W','W','W','W'],
+          ['W','W','W','W','W','W','W','W','W','W']
+        ],
+        difficulty: 'Intro',
+        author: 'Igor',
+        message: 'You can shoot over water.'
+      },
+      4: {
+        initialBoard: [
+          [null,null,null,null,null,null,null,null,null,null],
+          [null,'T',null,null,null,null,null,'M',null,null],
+          [null,null,'W','W','W','W','W','W',null,null],
+          [null,null,'W','W','W','W','W','W',null,null],
+          [null,null,'W','W','F','F','W','W',null,null],
+          [null,null,'W','W','F','F','W','W',null,null],
+          [null,null,'W','W','W','W','W','W',null,null],
+          [null,null,'W','W','W','W','W','W',null,null],
+          [null,'M',null,null,null,null,null,null,null,null],
+          [null,null,null,null,null,null,null,null,null,null]
+        ],
+        difficulty: 'Intro',
+        author: 'Igor',
+        message: 'You need to capture only one flag to pass the level'
+      },
+      5: {
+        initialBoard: [
+          ['F',null,'M',null,null,'M',null,'M',null,null],
+          [null,null,'M',null,null,'M',null,'M',null,null],
+          ['M','M','M','M','M','M','M','M','M','M'],
+          [null,null,'M',null,null,'M',null,null,'M',null],
+          [null,null,'M',null,null,'M',null,null,'M',null],
+          ['M','M','M','M','M','M','M','M','M','M'],
+          [null,null,null,'M',null,null,null,'M',null,null],
+          ['M','M','M','M','M','M','M','M','M','M'],
+          [null,null,null,'M',null,null,null,'M',null,null],
+          [null,null,null,'M',null,null,null,'M',null,'T']
+        ],
+        difficulty: 'Intro',
+        author: 'Igor',
+        message: 'Shoot blocks away to find a path to flag'
+      },
+      6: {
+        initialBoard: [
+          ['S','S','S','S','S','S','S','S','S','S'],
+          ['S',null,'T','S','F','F','S',null,'M','S'],
+          ['W','M','M','S','W','W','S','M',null,'S'],
+          ['S',null,null,'S','W','W','S',null,'M','S'],
+          ['S',null,'M','S','W','W','S','M',null,'S'],
+          ['S',null,null,'S','W','W','S',null,'M','S'],
+          ['S',null,'M','S','W','W','S','M',null,'S'],
+          ['S','M',null,'M',null,'M',null,'M',null,'S'],
+          ['S',null,'M',null,null,null,null,null,null,'S'],
+          ['S','S','S','S','S','S','S','S','S','S']
+        ],
+        difficulty: 'Intro',
+        author: 'Igor',
+        message: 'You can shoot over the water'
+      },
+      8: {
+        initialBoard: [
           ['S','S','S','S','S','S','S','S','S','S'],
           [null,null,'S','S','S','S','S',null,null,'T'],
           ['W','W','W','W',null,null,null,'M','M',null],
@@ -36,9 +138,10 @@ const _testState = {
           ['S','S','S','S','S','S','S','S','S','S']
         ],
         difficulty: 'Medium',
-        author: ''
+        author: '',
+        message: 'Sometimes you need all blocks'
       },
-      2: {
+      7: {
         initialBoard: [
           [null,null,'S',null,'W',null,'S',null,null,null],
           [null,'S','S','M','W','M','S','S',null,null],
@@ -52,9 +155,10 @@ const _testState = {
           [null,null,'S','S','F','S','S',null,null,null]
         ],
         difficulty: 'Easy',
-        author: 'MCK'
+        author: 'MCK',
+        message: ''
       },
-      3: {
+      9: {
         initialBoard: [
           ['S','S','S','S','S',null,null,'S','F','W'],
           [null,null,null,null,'M','M',null,'S','S','W'],
@@ -68,9 +172,27 @@ const _testState = {
           [null,null,null,'S',null,null,null,null,null,null]
         ],
         difficulty: 'Medium',
-        author: 'MCK'
+        author: 'MCK',
+        message: ''
       },
-      4: {
+      10: {
+        initialBoard: [
+          ['M','M','M','M','M','M','M','M','M','F'],
+          ['M','M','M',null,null,'M','M','M','M','W'],
+          ['M',null,null,null,'M',null,'M','M','M','W'],
+          ['M',null,null,'M',null,null,null,'M','M','W'],
+          ['M','M','M',null,'M','M',null,'M','M','W'],
+          ['M','M',null,null,'M','M',null,'M','M','W'],
+          ['M','M','M','M',null,'M',null,'M','W','W'],
+          ['M','M',null,null,'M','M','T',null,'M','W'],
+          ['M','M',null,null,'M','M',null,'M','M','M'],
+          ['M','M','M',null,null,null,null,'M','M','M']
+        ],
+        difficulty: 'Hard',
+        author: 'Simeon & Igor',
+        message: ''
+      },
+      11: {
         initialBoard: [
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
@@ -78,29 +200,14 @@ const _testState = {
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
-          [null,null,null,null,'T',null,null,null,null,null],
-          [null,null,null,null,null,null,null,null,null,null],
-          [null,null,null,null,null,null,null,null,null,null],
-          [null,null,null,null,null,null,null,null,null,null]
-        ],
-        difficulty: 'Medium',
-        author: 'MCK'
-      },
-      5: {
-        initialBoard: [
-          [null,null,null,null,null,null,null,null,null,null],
-          [null,null,null,null,null,null,null,null,null,null],
-          [null,null,null,null,null,null,null,null,null,null],
-          [null,null,null,null,null,null,null,null,null,null],
-          [null,null,null,null,null,null,null,null,null,null],
-          [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null],
           [null,null,null,null,null,null,null,null,null,null]
         ],
-        difficulty: 'Medium',
-        author: 'MCK'
+        difficulty: '',
+        author: '',
+        message: ''
       }
     },
     levelNumber: 1,

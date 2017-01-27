@@ -171,7 +171,8 @@ class Lasertank extends React.Component {
     return (
       <div className="main">
         <div className='header'>
-          <span className='logo'>LaserTank</span>
+          <span className='logo'>PuzzleBall Game</span>
+          <span className='sub-title'>inspired by <a target="_blank" href="http://perso.cgocable.ca/lasertank/ltank_en.html">LaserTank</a> game</span>
         </div>
         <div className="game">
           <div className="game-control">
@@ -195,6 +196,11 @@ class Lasertank extends React.Component {
               onClick={ this.props.undo }>
               Undo
             </button>
+            <div className="control-info">
+              <span>Move</span>
+              <img src="./frontend/sprites/mouse.svg" alt="mouse" />
+              <span>Shoot</span>
+            </div>
           </div>
           <Game>
             { this.generateTiles() }
@@ -223,6 +229,12 @@ class Lasertank extends React.Component {
             </div>
             <div className="level-shots-value">
               { this.props.score.shots }
+            </div>
+            <div className="level-hint-label">
+              Hint
+            </div>
+            <div className="level-hint-value">
+              { this.props.levelMessage }
             </div>
           </div>
         </div>
