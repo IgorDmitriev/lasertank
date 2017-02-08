@@ -58,7 +58,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _Root = __webpack_require__(207);
+	var _Root = __webpack_require__(231);
 	
 	var _Root2 = _interopRequireDefault(_Root);
 	
@@ -22692,11 +22692,11 @@
 	
 	var _redux = __webpack_require__(179);
 	
-	var _gameReducer = __webpack_require__(229);
+	var _gameReducer = __webpack_require__(202);
 	
 	var _gameReducer2 = _interopRequireDefault(_gameReducer);
 	
-	var _scoreReducer = __webpack_require__(231);
+	var _scoreReducer = __webpack_require__(230);
 	
 	var _scoreReducer2 = _interopRequireDefault(_scoreReducer);
 	
@@ -22708,7 +22708,121 @@
 	});
 
 /***/ },
-/* 202 */,
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _deepFreeze = __webpack_require__(203);
+	
+	var _deepFreeze2 = _interopRequireDefault(_deepFreeze);
+	
+	var _boardActions = __webpack_require__(204);
+	
+	var _board = __webpack_require__(205);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var _nullState = {
+	  board: {
+	    past: [],
+	    present: [[]]
+	  },
+	  laser: {},
+	  levels: {},
+	  levelNumber: 0,
+	  gameOver: false,
+	  won: false
+	};
+	
+	var gameReducer = function gameReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _nullState;
+	  var action = arguments[1];
+	
+	  (0, _deepFreeze2.default)(state);
+	  var board = (0, _board.deepDupBoard)(state.board.present);
+	  var dupPast = state.board.past.slice();
+	  var laser = state.laser;
+	
+	  var newBoard = void 0,
+	      newState = void 0;
+	
+	  switch (action.type) {
+	    case _boardActions.UNDO:
+	      if (state.board.past.length === 0) return state;
+	      var previous = dupPast[dupPast.length - 1];
+	      var undoPast = dupPast.slice(0, dupPast.length - 1);
+	      return _extends({}, state, {
+	        board: {
+	          past: undoPast,
+	          present: previous
+	        }
+	      });
+	    case _boardActions.SET_LEVEL:
+	      if (!state.levels[action.levelNumber]) return state;
+	      return _extends({}, state, {
+	        board: {
+	          past: [],
+	          present: state.levels[action.levelNumber].initialBoard
+	        },
+	        levelNumber: action.levelNumber,
+	        levelDifficulty: state.levels[action.levelNumber].difficulty,
+	        levelMessage: state.levels[action.levelNumber].message,
+	        gameOver: false,
+	        won: false
+	      });
+	    case _boardActions.RESET_LEVEL:
+	      return _extends({}, state, {
+	        board: {
+	          past: [],
+	          present: state.levels[state.levelNumber].initialBoard
+	        },
+	        gameOver: false,
+	        won: false
+	      });
+	    case _boardActions.MOVE_TANK:
+	      dupPast.push(state.board.present);
+	      var _dx = action.dx,
+	          _dy = action.dy;
+	
+	      newState = (0, _board.tryToMoveTank)(board, _dx, _dy);
+	
+	      newState.board['past'] = dupPast;
+	      return _extends({}, state, newState);
+	    case _boardActions.MOVE_LASER:
+	      dupPast.push(state.board.present);
+	      var x = action.x,
+	          y = action.y,
+	          _dx = action.dx,
+	          _dy = action.dy;
+	
+	      newState = (0, _board.tryToMoveLaser)(board, x, y, _dx, _dy);
+	      newState.board['past'] = dupPast;
+	      return _extends({}, state, newState);
+	    case _boardActions.MOVE_LASER_FORWARD:
+	      var _state$laser = state.laser,
+	          x = _state$laser.x,
+	          y = _state$laser.y,
+	          _dx = _state$laser.dx,
+	          _dy = _state$laser.dy;
+	
+	      newState = (0, _board.tryToMoveLaser)(board, x, y, _dx, _dy);
+	      newState.board['past'] = dupPast;
+	      return _extends({}, state, newState);
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = gameReducer;
+
+/***/ },
 /* 203 */
 /***/ function(module, exports) {
 
@@ -22875,7 +22989,7 @@
 	});
 	exports.findPath = exports.tryToMoveLaser = exports.tryToMoveMovableBlock = exports.tryToMoveTank = exports.inBoardPos = exports.findTank = exports.deepDupBoard = undefined;
 	
-	var _pathfinding = __webpack_require__(232);
+	var _pathfinding = __webpack_require__(206);
 	
 	var _pathfinding2 = _interopRequireDefault(_pathfinding);
 	
@@ -23056,2202 +23170,45 @@
 	};
 
 /***/ },
-/* 206 */,
+/* 206 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(207);
+
+
+/***/ },
 /* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(208);
-	
-	var _LasertankContainer = __webpack_require__(225);
-	
-	var _LasertankContainer2 = _interopRequireDefault(_LasertankContainer);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Root = function Root(_ref) {
-	  var store = _ref.store;
-	  return _react2.default.createElement(
-	    _reactRedux.Provider,
-	    { store: store },
-	    _react2.default.createElement(_LasertankContainer2.default, null)
-	  );
+	module.exports = {
+	    'Heap'                      : __webpack_require__(208),
+	    'Node'                      : __webpack_require__(210),
+	    'Grid'                      : __webpack_require__(211),
+	    'Util'                      : __webpack_require__(213),
+	    'DiagonalMovement'          : __webpack_require__(212),
+	    'Heuristic'                 : __webpack_require__(214),
+	    'AStarFinder'               : __webpack_require__(215),
+	    'BestFirstFinder'           : __webpack_require__(216),
+	    'BreadthFirstFinder'        : __webpack_require__(217),
+	    'DijkstraFinder'            : __webpack_require__(218),
+	    'BiAStarFinder'             : __webpack_require__(219),
+	    'BiBestFirstFinder'         : __webpack_require__(220),
+	    'BiBreadthFirstFinder'      : __webpack_require__(221),
+	    'BiDijkstraFinder'          : __webpack_require__(222),
+	    'IDAStarFinder'             : __webpack_require__(223),
+	    'JumpPointFinder'           : __webpack_require__(224),
 	};
-	
-	exports.default = Root;
+
 
 /***/ },
 /* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	exports.__esModule = true;
-	exports.connect = exports.connectAdvanced = exports.Provider = undefined;
-	
-	var _Provider = __webpack_require__(209);
-	
-	var _Provider2 = _interopRequireDefault(_Provider);
-	
-	var _connectAdvanced = __webpack_require__(213);
-	
-	var _connectAdvanced2 = _interopRequireDefault(_connectAdvanced);
-	
-	var _connect = __webpack_require__(216);
-	
-	var _connect2 = _interopRequireDefault(_connect);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.Provider = _Provider2.default;
-	exports.connectAdvanced = _connectAdvanced2.default;
-	exports.connect = _connect2.default;
+	module.exports = __webpack_require__(209);
+
 
 /***/ },
 /* 209 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-	
-	exports.__esModule = true;
-	exports.default = undefined;
-	
-	var _react = __webpack_require__(1);
-	
-	var _Subscription = __webpack_require__(210);
-	
-	var _Subscription2 = _interopRequireDefault(_Subscription);
-	
-	var _storeShape = __webpack_require__(211);
-	
-	var _storeShape2 = _interopRequireDefault(_storeShape);
-	
-	var _warning = __webpack_require__(212);
-	
-	var _warning2 = _interopRequireDefault(_warning);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var didWarnAboutReceivingStore = false;
-	function warnAboutReceivingStore() {
-	  if (didWarnAboutReceivingStore) {
-	    return;
-	  }
-	  didWarnAboutReceivingStore = true;
-	
-	  (0, _warning2.default)('<Provider> does not support changing `store` on the fly. ' + 'It is most likely that you see this error because you updated to ' + 'Redux 2.x and React Redux 2.x which no longer hot reload reducers ' + 'automatically. See https://github.com/reactjs/react-redux/releases/' + 'tag/v2.0.0 for the migration instructions.');
-	}
-	
-	var Provider = function (_Component) {
-	  _inherits(Provider, _Component);
-	
-	  Provider.prototype.getChildContext = function getChildContext() {
-	    return { store: this.store, storeSubscription: null };
-	  };
-	
-	  function Provider(props, context) {
-	    _classCallCheck(this, Provider);
-	
-	    var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
-	
-	    _this.store = props.store;
-	    return _this;
-	  }
-	
-	  Provider.prototype.render = function render() {
-	    return _react.Children.only(this.props.children);
-	  };
-	
-	  return Provider;
-	}(_react.Component);
-	
-	exports.default = Provider;
-	
-	
-	if (process.env.NODE_ENV !== 'production') {
-	  Provider.prototype.componentWillReceiveProps = function (nextProps) {
-	    var store = this.store;
-	    var nextStore = nextProps.store;
-	
-	
-	    if (store !== nextStore) {
-	      warnAboutReceivingStore();
-	    }
-	  };
-	}
-	
-	Provider.propTypes = {
-	  store: _storeShape2.default.isRequired,
-	  children: _react.PropTypes.element.isRequired
-	};
-	Provider.childContextTypes = {
-	  store: _storeShape2.default.isRequired,
-	  storeSubscription: _react.PropTypes.instanceOf(_Subscription2.default)
-	};
-	Provider.displayName = 'Provider';
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 210 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	exports.__esModule = true;
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	// encapsulates the subscription logic for connecting a component to the redux store, as
-	// well as nesting subscriptions of descendant components, so that we can ensure the
-	// ancestor components re-render before descendants
-	
-	var CLEARED = null;
-	var nullListeners = {
-	  notify: function notify() {}
-	};
-	
-	function createListenerCollection() {
-	  // the current/next pattern is copied from redux's createStore code.
-	  // TODO: refactor+expose that code to be reusable here?
-	  var current = [];
-	  var next = [];
-	
-	  return {
-	    clear: function clear() {
-	      next = CLEARED;
-	      current = CLEARED;
-	    },
-	    notify: function notify() {
-	      var listeners = current = next;
-	      for (var i = 0; i < listeners.length; i++) {
-	        listeners[i]();
-	      }
-	    },
-	    subscribe: function subscribe(listener) {
-	      var isSubscribed = true;
-	      if (next === current) next = current.slice();
-	      next.push(listener);
-	
-	      return function unsubscribe() {
-	        if (!isSubscribed || current === CLEARED) return;
-	        isSubscribed = false;
-	
-	        if (next === current) next = current.slice();
-	        next.splice(next.indexOf(listener), 1);
-	      };
-	    }
-	  };
-	}
-	
-	var Subscription = function () {
-	  function Subscription(store, parentSub) {
-	    _classCallCheck(this, Subscription);
-	
-	    this.store = store;
-	    this.parentSub = parentSub;
-	    this.unsubscribe = null;
-	    this.listeners = nullListeners;
-	  }
-	
-	  Subscription.prototype.addNestedSub = function addNestedSub(listener) {
-	    this.trySubscribe();
-	    return this.listeners.subscribe(listener);
-	  };
-	
-	  Subscription.prototype.notifyNestedSubs = function notifyNestedSubs() {
-	    this.listeners.notify();
-	  };
-	
-	  Subscription.prototype.isSubscribed = function isSubscribed() {
-	    return Boolean(this.unsubscribe);
-	  };
-	
-	  Subscription.prototype.trySubscribe = function trySubscribe() {
-	    if (!this.unsubscribe) {
-	      // this.onStateChange is set by connectAdvanced.initSubscription()
-	      this.unsubscribe = this.parentSub ? this.parentSub.addNestedSub(this.onStateChange) : this.store.subscribe(this.onStateChange);
-	
-	      this.listeners = createListenerCollection();
-	    }
-	  };
-	
-	  Subscription.prototype.tryUnsubscribe = function tryUnsubscribe() {
-	    if (this.unsubscribe) {
-	      this.unsubscribe();
-	      this.unsubscribe = null;
-	      this.listeners.clear();
-	      this.listeners = nullListeners;
-	    }
-	  };
-	
-	  return Subscription;
-	}();
-	
-	exports.default = Subscription;
-
-/***/ },
-/* 211 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	
-	var _react = __webpack_require__(1);
-	
-	exports.default = _react.PropTypes.shape({
-	  subscribe: _react.PropTypes.func.isRequired,
-	  dispatch: _react.PropTypes.func.isRequired,
-	  getState: _react.PropTypes.func.isRequired
-	});
-
-/***/ },
-/* 212 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	exports.default = warning;
-	/**
-	 * Prints a warning in the console if it exists.
-	 *
-	 * @param {String} message The warning message.
-	 * @returns {void}
-	 */
-	function warning(message) {
-	  /* eslint-disable no-console */
-	  if (typeof console !== 'undefined' && typeof console.error === 'function') {
-	    console.error(message);
-	  }
-	  /* eslint-enable no-console */
-	  try {
-	    // This error was thrown as a convenience so that if you enable
-	    // "break on all exceptions" in your console,
-	    // it would pause the execution at this line.
-	    throw new Error(message);
-	    /* eslint-disable no-empty */
-	  } catch (e) {}
-	  /* eslint-enable no-empty */
-	}
-
-/***/ },
-/* 213 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-	
-	exports.__esModule = true;
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	exports.default = connectAdvanced;
-	
-	var _hoistNonReactStatics = __webpack_require__(214);
-	
-	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
-	
-	var _invariant = __webpack_require__(215);
-	
-	var _invariant2 = _interopRequireDefault(_invariant);
-	
-	var _react = __webpack_require__(1);
-	
-	var _Subscription = __webpack_require__(210);
-	
-	var _Subscription2 = _interopRequireDefault(_Subscription);
-	
-	var _storeShape = __webpack_require__(211);
-	
-	var _storeShape2 = _interopRequireDefault(_storeShape);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-	
-	var hotReloadingVersion = 0;
-	function connectAdvanced(
-	/*
-	  selectorFactory is a func that is responsible for returning the selector function used to
-	  compute new props from state, props, and dispatch. For example:
-	     export default connectAdvanced((dispatch, options) => (state, props) => ({
-	      thing: state.things[props.thingId],
-	      saveThing: fields => dispatch(actionCreators.saveThing(props.thingId, fields)),
-	    }))(YourComponent)
-	   Access to dispatch is provided to the factory so selectorFactories can bind actionCreators
-	  outside of their selector as an optimization. Options passed to connectAdvanced are passed to
-	  the selectorFactory, along with displayName and WrappedComponent, as the second argument.
-	   Note that selectorFactory is responsible for all caching/memoization of inbound and outbound
-	  props. Do not use connectAdvanced directly without memoizing results between calls to your
-	  selector, otherwise the Connect component will re-render on every state or props change.
-	*/
-	selectorFactory) {
-	  var _contextTypes, _childContextTypes;
-	
-	  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-	      _ref$getDisplayName = _ref.getDisplayName,
-	      getDisplayName = _ref$getDisplayName === undefined ? function (name) {
-	    return 'ConnectAdvanced(' + name + ')';
-	  } : _ref$getDisplayName,
-	      _ref$methodName = _ref.methodName,
-	      methodName = _ref$methodName === undefined ? 'connectAdvanced' : _ref$methodName,
-	      _ref$renderCountProp = _ref.renderCountProp,
-	      renderCountProp = _ref$renderCountProp === undefined ? undefined : _ref$renderCountProp,
-	      _ref$shouldHandleStat = _ref.shouldHandleStateChanges,
-	      shouldHandleStateChanges = _ref$shouldHandleStat === undefined ? true : _ref$shouldHandleStat,
-	      _ref$storeKey = _ref.storeKey,
-	      storeKey = _ref$storeKey === undefined ? 'store' : _ref$storeKey,
-	      _ref$withRef = _ref.withRef,
-	      withRef = _ref$withRef === undefined ? false : _ref$withRef,
-	      connectOptions = _objectWithoutProperties(_ref, ['getDisplayName', 'methodName', 'renderCountProp', 'shouldHandleStateChanges', 'storeKey', 'withRef']);
-	
-	  var subscriptionKey = storeKey + 'Subscription';
-	  var version = hotReloadingVersion++;
-	
-	  var contextTypes = (_contextTypes = {}, _contextTypes[storeKey] = _storeShape2.default, _contextTypes[subscriptionKey] = _react.PropTypes.instanceOf(_Subscription2.default), _contextTypes);
-	  var childContextTypes = (_childContextTypes = {}, _childContextTypes[subscriptionKey] = _react.PropTypes.instanceOf(_Subscription2.default), _childContextTypes);
-	
-	  return function wrapWithConnect(WrappedComponent) {
-	    (0, _invariant2.default)(typeof WrappedComponent == 'function', 'You must pass a component to the function returned by ' + ('connect. Instead received ' + WrappedComponent));
-	
-	    var wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
-	
-	    var displayName = getDisplayName(wrappedComponentName);
-	
-	    var selectorFactoryOptions = _extends({}, connectOptions, {
-	      getDisplayName: getDisplayName,
-	      methodName: methodName,
-	      renderCountProp: renderCountProp,
-	      shouldHandleStateChanges: shouldHandleStateChanges,
-	      storeKey: storeKey,
-	      withRef: withRef,
-	      displayName: displayName,
-	      wrappedComponentName: wrappedComponentName,
-	      WrappedComponent: WrappedComponent
-	    });
-	
-	    var Connect = function (_Component) {
-	      _inherits(Connect, _Component);
-	
-	      function Connect(props, context) {
-	        _classCallCheck(this, Connect);
-	
-	        var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
-	
-	        _this.version = version;
-	        _this.state = {};
-	        _this.renderCount = 0;
-	        _this.store = _this.props[storeKey] || _this.context[storeKey];
-	        _this.parentSub = props[subscriptionKey] || context[subscriptionKey];
-	
-	        _this.setWrappedInstance = _this.setWrappedInstance.bind(_this);
-	
-	        (0, _invariant2.default)(_this.store, 'Could not find "' + storeKey + '" in either the context or ' + ('props of "' + displayName + '". ') + 'Either wrap the root component in a <Provider>, ' + ('or explicitly pass "' + storeKey + '" as a prop to "' + displayName + '".'));
-	
-	        // make sure `getState` is properly bound in order to avoid breaking
-	        // custom store implementations that rely on the store's context
-	        _this.getState = _this.store.getState.bind(_this.store);
-	
-	        _this.initSelector();
-	        _this.initSubscription();
-	        return _this;
-	      }
-	
-	      Connect.prototype.getChildContext = function getChildContext() {
-	        var _ref2;
-	
-	        return _ref2 = {}, _ref2[subscriptionKey] = this.subscription || this.parentSub, _ref2;
-	      };
-	
-	      Connect.prototype.componentDidMount = function componentDidMount() {
-	        if (!shouldHandleStateChanges) return;
-	
-	        // componentWillMount fires during server side rendering, but componentDidMount and
-	        // componentWillUnmount do not. Because of this, trySubscribe happens during ...didMount.
-	        // Otherwise, unsubscription would never take place during SSR, causing a memory leak.
-	        // To handle the case where a child component may have triggered a state change by
-	        // dispatching an action in its componentWillMount, we have to re-run the select and maybe
-	        // re-render.
-	        this.subscription.trySubscribe();
-	        this.selector.run(this.props);
-	        if (this.selector.shouldComponentUpdate) this.forceUpdate();
-	      };
-	
-	      Connect.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-	        this.selector.run(nextProps);
-	      };
-	
-	      Connect.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
-	        return this.selector.shouldComponentUpdate;
-	      };
-	
-	      Connect.prototype.componentWillUnmount = function componentWillUnmount() {
-	        if (this.subscription) this.subscription.tryUnsubscribe();
-	        // these are just to guard against extra memory leakage if a parent element doesn't
-	        // dereference this instance properly, such as an async callback that never finishes
-	        this.subscription = null;
-	        this.store = null;
-	        this.parentSub = null;
-	        this.selector.run = function () {};
-	      };
-	
-	      Connect.prototype.getWrappedInstance = function getWrappedInstance() {
-	        (0, _invariant2.default)(withRef, 'To access the wrapped instance, you need to specify ' + ('{ withRef: true } in the options argument of the ' + methodName + '() call.'));
-	        return this.wrappedInstance;
-	      };
-	
-	      Connect.prototype.setWrappedInstance = function setWrappedInstance(ref) {
-	        this.wrappedInstance = ref;
-	      };
-	
-	      Connect.prototype.initSelector = function initSelector() {
-	        var dispatch = this.store.dispatch;
-	        var getState = this.getState;
-	
-	        var sourceSelector = selectorFactory(dispatch, selectorFactoryOptions);
-	
-	        // wrap the selector in an object that tracks its results between runs
-	        var selector = this.selector = {
-	          shouldComponentUpdate: true,
-	          props: sourceSelector(getState(), this.props),
-	          run: function runComponentSelector(props) {
-	            try {
-	              var nextProps = sourceSelector(getState(), props);
-	              if (selector.error || nextProps !== selector.props) {
-	                selector.shouldComponentUpdate = true;
-	                selector.props = nextProps;
-	                selector.error = null;
-	              }
-	            } catch (error) {
-	              selector.shouldComponentUpdate = true;
-	              selector.error = error;
-	            }
-	          }
-	        };
-	      };
-	
-	      Connect.prototype.initSubscription = function initSubscription() {
-	        var _this2 = this;
-	
-	        if (shouldHandleStateChanges) {
-	          (function () {
-	            var subscription = _this2.subscription = new _Subscription2.default(_this2.store, _this2.parentSub);
-	            var dummyState = {};
-	
-	            subscription.onStateChange = function onStateChange() {
-	              this.selector.run(this.props);
-	
-	              if (!this.selector.shouldComponentUpdate) {
-	                subscription.notifyNestedSubs();
-	              } else {
-	                this.componentDidUpdate = function componentDidUpdate() {
-	                  this.componentDidUpdate = undefined;
-	                  subscription.notifyNestedSubs();
-	                };
-	
-	                this.setState(dummyState);
-	              }
-	            }.bind(_this2);
-	          })();
-	        }
-	      };
-	
-	      Connect.prototype.isSubscribed = function isSubscribed() {
-	        return Boolean(this.subscription) && this.subscription.isSubscribed();
-	      };
-	
-	      Connect.prototype.addExtraProps = function addExtraProps(props) {
-	        if (!withRef && !renderCountProp) return props;
-	        // make a shallow copy so that fields added don't leak to the original selector.
-	        // this is especially important for 'ref' since that's a reference back to the component
-	        // instance. a singleton memoized selector would then be holding a reference to the
-	        // instance, preventing the instance from being garbage collected, and that would be bad
-	        var withExtras = _extends({}, props);
-	        if (withRef) withExtras.ref = this.setWrappedInstance;
-	        if (renderCountProp) withExtras[renderCountProp] = this.renderCount++;
-	        return withExtras;
-	      };
-	
-	      Connect.prototype.render = function render() {
-	        var selector = this.selector;
-	        selector.shouldComponentUpdate = false;
-	
-	        if (selector.error) {
-	          throw selector.error;
-	        } else {
-	          return (0, _react.createElement)(WrappedComponent, this.addExtraProps(selector.props));
-	        }
-	      };
-	
-	      return Connect;
-	    }(_react.Component);
-	
-	    Connect.WrappedComponent = WrappedComponent;
-	    Connect.displayName = displayName;
-	    Connect.childContextTypes = childContextTypes;
-	    Connect.contextTypes = contextTypes;
-	    Connect.propTypes = contextTypes;
-	
-	    if (process.env.NODE_ENV !== 'production') {
-	      Connect.prototype.componentWillUpdate = function componentWillUpdate() {
-	        // We are hot reloading!
-	        if (this.version !== version) {
-	          this.version = version;
-	          this.initSelector();
-	
-	          if (this.subscription) this.subscription.tryUnsubscribe();
-	          this.initSubscription();
-	          if (shouldHandleStateChanges) this.subscription.trySubscribe();
-	        }
-	      };
-	    }
-	
-	    return (0, _hoistNonReactStatics2.default)(Connect, WrappedComponent);
-	  };
-	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 214 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2015, Yahoo! Inc.
-	 * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
-	 */
-	'use strict';
-	
-	var REACT_STATICS = {
-	    childContextTypes: true,
-	    contextTypes: true,
-	    defaultProps: true,
-	    displayName: true,
-	    getDefaultProps: true,
-	    mixins: true,
-	    propTypes: true,
-	    type: true
-	};
-	
-	var KNOWN_STATICS = {
-	    name: true,
-	    length: true,
-	    prototype: true,
-	    caller: true,
-	    arguments: true,
-	    arity: true
-	};
-	
-	var isGetOwnPropertySymbolsAvailable = typeof Object.getOwnPropertySymbols === 'function';
-	
-	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
-	    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
-	        var keys = Object.getOwnPropertyNames(sourceComponent);
-	
-	        /* istanbul ignore else */
-	        if (isGetOwnPropertySymbolsAvailable) {
-	            keys = keys.concat(Object.getOwnPropertySymbols(sourceComponent));
-	        }
-	
-	        for (var i = 0; i < keys.length; ++i) {
-	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
-	                try {
-	                    targetComponent[keys[i]] = sourceComponent[keys[i]];
-	                } catch (error) {
-	
-	                }
-	            }
-	        }
-	    }
-	
-	    return targetComponent;
-	};
-
-
-/***/ },
-/* 215 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-	
-	'use strict';
-	
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-	
-	var invariant = function(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-	
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error(
-	        'Minified exception occurred; use the non-minified dev environment ' +
-	        'for the full error message and additional helpful warnings.'
-	      );
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(
-	        format.replace(/%s/g, function() { return args[argIndex++]; })
-	      );
-	      error.name = 'Invariant Violation';
-	    }
-	
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-	
-	module.exports = invariant;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 216 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	exports.createConnect = createConnect;
-	
-	var _connectAdvanced = __webpack_require__(213);
-	
-	var _connectAdvanced2 = _interopRequireDefault(_connectAdvanced);
-	
-	var _shallowEqual = __webpack_require__(217);
-	
-	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
-	
-	var _mapDispatchToProps = __webpack_require__(218);
-	
-	var _mapDispatchToProps2 = _interopRequireDefault(_mapDispatchToProps);
-	
-	var _mapStateToProps = __webpack_require__(221);
-	
-	var _mapStateToProps2 = _interopRequireDefault(_mapStateToProps);
-	
-	var _mergeProps = __webpack_require__(222);
-	
-	var _mergeProps2 = _interopRequireDefault(_mergeProps);
-	
-	var _selectorFactory = __webpack_require__(223);
-	
-	var _selectorFactory2 = _interopRequireDefault(_selectorFactory);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-	
-	/*
-	  connect is a facade over connectAdvanced. It turns its args into a compatible
-	  selectorFactory, which has the signature:
-	
-	    (dispatch, options) => (nextState, nextOwnProps) => nextFinalProps
-	  
-	  connect passes its args to connectAdvanced as options, which will in turn pass them to
-	  selectorFactory each time a Connect component instance is instantiated or hot reloaded.
-	
-	  selectorFactory returns a final props selector from its mapStateToProps,
-	  mapStateToPropsFactories, mapDispatchToProps, mapDispatchToPropsFactories, mergeProps,
-	  mergePropsFactories, and pure args.
-	
-	  The resulting final props selector is called by the Connect component instance whenever
-	  it receives new props or store state.
-	 */
-	
-	function match(arg, factories, name) {
-	  for (var i = factories.length - 1; i >= 0; i--) {
-	    var result = factories[i](arg);
-	    if (result) return result;
-	  }
-	
-	  return function (dispatch, options) {
-	    throw new Error('Invalid value of type ' + typeof arg + ' for ' + name + ' argument when connecting component ' + options.wrappedComponentName + '.');
-	  };
-	}
-	
-	function strictEqual(a, b) {
-	  return a === b;
-	}
-	
-	// createConnect with default args builds the 'official' connect behavior. Calling it with
-	// different options opens up some testing and extensibility scenarios
-	function createConnect() {
-	  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-	      _ref$connectHOC = _ref.connectHOC,
-	      connectHOC = _ref$connectHOC === undefined ? _connectAdvanced2.default : _ref$connectHOC,
-	      _ref$mapStateToPropsF = _ref.mapStateToPropsFactories,
-	      mapStateToPropsFactories = _ref$mapStateToPropsF === undefined ? _mapStateToProps2.default : _ref$mapStateToPropsF,
-	      _ref$mapDispatchToPro = _ref.mapDispatchToPropsFactories,
-	      mapDispatchToPropsFactories = _ref$mapDispatchToPro === undefined ? _mapDispatchToProps2.default : _ref$mapDispatchToPro,
-	      _ref$mergePropsFactor = _ref.mergePropsFactories,
-	      mergePropsFactories = _ref$mergePropsFactor === undefined ? _mergeProps2.default : _ref$mergePropsFactor,
-	      _ref$selectorFactory = _ref.selectorFactory,
-	      selectorFactory = _ref$selectorFactory === undefined ? _selectorFactory2.default : _ref$selectorFactory;
-	
-	  return function connect(mapStateToProps, mapDispatchToProps, mergeProps) {
-	    var _ref2 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
-	        _ref2$pure = _ref2.pure,
-	        pure = _ref2$pure === undefined ? true : _ref2$pure,
-	        _ref2$areStatesEqual = _ref2.areStatesEqual,
-	        areStatesEqual = _ref2$areStatesEqual === undefined ? strictEqual : _ref2$areStatesEqual,
-	        _ref2$areOwnPropsEqua = _ref2.areOwnPropsEqual,
-	        areOwnPropsEqual = _ref2$areOwnPropsEqua === undefined ? _shallowEqual2.default : _ref2$areOwnPropsEqua,
-	        _ref2$areStatePropsEq = _ref2.areStatePropsEqual,
-	        areStatePropsEqual = _ref2$areStatePropsEq === undefined ? _shallowEqual2.default : _ref2$areStatePropsEq,
-	        _ref2$areMergedPropsE = _ref2.areMergedPropsEqual,
-	        areMergedPropsEqual = _ref2$areMergedPropsE === undefined ? _shallowEqual2.default : _ref2$areMergedPropsE,
-	        extraOptions = _objectWithoutProperties(_ref2, ['pure', 'areStatesEqual', 'areOwnPropsEqual', 'areStatePropsEqual', 'areMergedPropsEqual']);
-	
-	    var initMapStateToProps = match(mapStateToProps, mapStateToPropsFactories, 'mapStateToProps');
-	    var initMapDispatchToProps = match(mapDispatchToProps, mapDispatchToPropsFactories, 'mapDispatchToProps');
-	    var initMergeProps = match(mergeProps, mergePropsFactories, 'mergeProps');
-	
-	    return connectHOC(selectorFactory, _extends({
-	      // used in error messages
-	      methodName: 'connect',
-	
-	      // used to compute Connect's displayName from the wrapped component's displayName.
-	      getDisplayName: function getDisplayName(name) {
-	        return 'Connect(' + name + ')';
-	      },
-	
-	      // if mapStateToProps is falsy, the Connect component doesn't subscribe to store state changes
-	      shouldHandleStateChanges: Boolean(mapStateToProps),
-	
-	      // passed through to selectorFactory
-	      initMapStateToProps: initMapStateToProps,
-	      initMapDispatchToProps: initMapDispatchToProps,
-	      initMergeProps: initMergeProps,
-	      pure: pure,
-	      areStatesEqual: areStatesEqual,
-	      areOwnPropsEqual: areOwnPropsEqual,
-	      areStatePropsEqual: areStatePropsEqual,
-	      areMergedPropsEqual: areMergedPropsEqual
-	
-	    }, extraOptions));
-	  };
-	}
-	
-	exports.default = createConnect();
-
-/***/ },
-/* 217 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	exports.__esModule = true;
-	exports.default = shallowEqual;
-	var hasOwn = Object.prototype.hasOwnProperty;
-	
-	function shallowEqual(a, b) {
-	  if (a === b) return true;
-	
-	  var countA = 0;
-	  var countB = 0;
-	
-	  for (var key in a) {
-	    if (hasOwn.call(a, key) && a[key] !== b[key]) return false;
-	    countA++;
-	  }
-	
-	  for (var _key in b) {
-	    if (hasOwn.call(b, _key)) countB++;
-	  }
-	
-	  return countA === countB;
-	}
-
-/***/ },
-/* 218 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	exports.whenMapDispatchToPropsIsFunction = whenMapDispatchToPropsIsFunction;
-	exports.whenMapDispatchToPropsIsMissing = whenMapDispatchToPropsIsMissing;
-	exports.whenMapDispatchToPropsIsObject = whenMapDispatchToPropsIsObject;
-	
-	var _redux = __webpack_require__(179);
-	
-	var _wrapMapToProps = __webpack_require__(219);
-	
-	function whenMapDispatchToPropsIsFunction(mapDispatchToProps) {
-	  return typeof mapDispatchToProps === 'function' ? (0, _wrapMapToProps.wrapMapToPropsFunc)(mapDispatchToProps, 'mapDispatchToProps') : undefined;
-	}
-	
-	function whenMapDispatchToPropsIsMissing(mapDispatchToProps) {
-	  return !mapDispatchToProps ? (0, _wrapMapToProps.wrapMapToPropsConstant)(function (dispatch) {
-	    return { dispatch: dispatch };
-	  }) : undefined;
-	}
-	
-	function whenMapDispatchToPropsIsObject(mapDispatchToProps) {
-	  return mapDispatchToProps && typeof mapDispatchToProps === 'object' ? (0, _wrapMapToProps.wrapMapToPropsConstant)(function (dispatch) {
-	    return (0, _redux.bindActionCreators)(mapDispatchToProps, dispatch);
-	  }) : undefined;
-	}
-	
-	exports.default = [whenMapDispatchToPropsIsFunction, whenMapDispatchToPropsIsMissing, whenMapDispatchToPropsIsObject];
-
-/***/ },
-/* 219 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-	
-	exports.__esModule = true;
-	exports.wrapMapToPropsConstant = wrapMapToPropsConstant;
-	exports.getDependsOnOwnProps = getDependsOnOwnProps;
-	exports.wrapMapToPropsFunc = wrapMapToPropsFunc;
-	
-	var _verifyPlainObject = __webpack_require__(220);
-	
-	var _verifyPlainObject2 = _interopRequireDefault(_verifyPlainObject);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function wrapMapToPropsConstant(getConstant) {
-	  return function initConstantSelector(dispatch, options) {
-	    var constant = getConstant(dispatch, options);
-	
-	    function constantSelector() {
-	      return constant;
-	    }
-	    constantSelector.dependsOnOwnProps = false;
-	    return constantSelector;
-	  };
-	}
-	
-	// dependsOnOwnProps is used by createMapToPropsProxy to determine whether to pass props as args
-	// to the mapToProps function being wrapped. It is also used by makePurePropsSelector to determine
-	// whether mapToProps needs to be invoked when props have changed.
-	// 
-	// A length of one signals that mapToProps does not depend on props from the parent component.
-	// A length of zero is assumed to mean mapToProps is getting args via arguments or ...args and
-	// therefore not reporting its length accurately..
-	function getDependsOnOwnProps(mapToProps) {
-	  return mapToProps.dependsOnOwnProps !== null && mapToProps.dependsOnOwnProps !== undefined ? Boolean(mapToProps.dependsOnOwnProps) : mapToProps.length !== 1;
-	}
-	
-	// Used by whenMapStateToPropsIsFunction and whenMapDispatchToPropsIsFunction,
-	// this function wraps mapToProps in a proxy function which does several things:
-	// 
-	//  * Detects whether the mapToProps function being called depends on props, which
-	//    is used by selectorFactory to decide if it should reinvoke on props changes.
-	//    
-	//  * On first call, handles mapToProps if returns another function, and treats that
-	//    new function as the true mapToProps for subsequent calls.
-	//    
-	//  * On first call, verifies the first result is a plain object, in order to warn
-	//    the developer that their mapToProps function is not returning a valid result.
-	//    
-	function wrapMapToPropsFunc(mapToProps, methodName) {
-	  return function initProxySelector(dispatch, _ref) {
-	    var displayName = _ref.displayName;
-	
-	    var proxy = function mapToPropsProxy(stateOrDispatch, ownProps) {
-	      return proxy.dependsOnOwnProps ? proxy.mapToProps(stateOrDispatch, ownProps) : proxy.mapToProps(stateOrDispatch);
-	    };
-	
-	    proxy.dependsOnOwnProps = getDependsOnOwnProps(mapToProps);
-	
-	    proxy.mapToProps = function detectFactoryAndVerify(stateOrDispatch, ownProps) {
-	      proxy.mapToProps = mapToProps;
-	      var props = proxy(stateOrDispatch, ownProps);
-	
-	      if (typeof props === 'function') {
-	        proxy.mapToProps = props;
-	        proxy.dependsOnOwnProps = getDependsOnOwnProps(props);
-	        props = proxy(stateOrDispatch, ownProps);
-	      }
-	
-	      if (process.env.NODE_ENV !== 'production') (0, _verifyPlainObject2.default)(props, displayName, methodName);
-	
-	      return props;
-	    };
-	
-	    return proxy;
-	  };
-	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 220 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	exports.default = verifyPlainObject;
-	
-	var _isPlainObject = __webpack_require__(181);
-	
-	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
-	
-	var _warning = __webpack_require__(212);
-	
-	var _warning2 = _interopRequireDefault(_warning);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function verifyPlainObject(value, displayName, methodName) {
-	  if (!(0, _isPlainObject2.default)(value)) {
-	    (0, _warning2.default)(methodName + '() in ' + displayName + ' must return a plain object. Instead received ' + value + '.');
-	  }
-	}
-
-/***/ },
-/* 221 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	exports.whenMapStateToPropsIsFunction = whenMapStateToPropsIsFunction;
-	exports.whenMapStateToPropsIsMissing = whenMapStateToPropsIsMissing;
-	
-	var _wrapMapToProps = __webpack_require__(219);
-	
-	function whenMapStateToPropsIsFunction(mapStateToProps) {
-	  return typeof mapStateToProps === 'function' ? (0, _wrapMapToProps.wrapMapToPropsFunc)(mapStateToProps, 'mapStateToProps') : undefined;
-	}
-	
-	function whenMapStateToPropsIsMissing(mapStateToProps) {
-	  return !mapStateToProps ? (0, _wrapMapToProps.wrapMapToPropsConstant)(function () {
-	    return {};
-	  }) : undefined;
-	}
-	
-	exports.default = [whenMapStateToPropsIsFunction, whenMapStateToPropsIsMissing];
-
-/***/ },
-/* 222 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-	
-	exports.__esModule = true;
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	exports.defaultMergeProps = defaultMergeProps;
-	exports.wrapMergePropsFunc = wrapMergePropsFunc;
-	exports.whenMergePropsIsFunction = whenMergePropsIsFunction;
-	exports.whenMergePropsIsOmitted = whenMergePropsIsOmitted;
-	
-	var _verifyPlainObject = __webpack_require__(220);
-	
-	var _verifyPlainObject2 = _interopRequireDefault(_verifyPlainObject);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function defaultMergeProps(stateProps, dispatchProps, ownProps) {
-	  return _extends({}, ownProps, stateProps, dispatchProps);
-	}
-	
-	function wrapMergePropsFunc(mergeProps) {
-	  return function initMergePropsProxy(dispatch, _ref) {
-	    var displayName = _ref.displayName,
-	        pure = _ref.pure,
-	        areMergedPropsEqual = _ref.areMergedPropsEqual;
-	
-	    var hasRunOnce = false;
-	    var mergedProps = void 0;
-	
-	    return function mergePropsProxy(stateProps, dispatchProps, ownProps) {
-	      var nextMergedProps = mergeProps(stateProps, dispatchProps, ownProps);
-	
-	      if (hasRunOnce) {
-	        if (!pure || !areMergedPropsEqual(nextMergedProps, mergedProps)) mergedProps = nextMergedProps;
-	      } else {
-	        hasRunOnce = true;
-	        mergedProps = nextMergedProps;
-	
-	        if (process.env.NODE_ENV !== 'production') (0, _verifyPlainObject2.default)(mergedProps, displayName, 'mergeProps');
-	      }
-	
-	      return mergedProps;
-	    };
-	  };
-	}
-	
-	function whenMergePropsIsFunction(mergeProps) {
-	  return typeof mergeProps === 'function' ? wrapMergePropsFunc(mergeProps) : undefined;
-	}
-	
-	function whenMergePropsIsOmitted(mergeProps) {
-	  return !mergeProps ? function () {
-	    return defaultMergeProps;
-	  } : undefined;
-	}
-	
-	exports.default = [whenMergePropsIsFunction, whenMergePropsIsOmitted];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 223 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-	
-	exports.__esModule = true;
-	exports.impureFinalPropsSelectorFactory = impureFinalPropsSelectorFactory;
-	exports.pureFinalPropsSelectorFactory = pureFinalPropsSelectorFactory;
-	exports.default = finalPropsSelectorFactory;
-	
-	var _verifySubselectors = __webpack_require__(224);
-	
-	var _verifySubselectors2 = _interopRequireDefault(_verifySubselectors);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-	
-	function impureFinalPropsSelectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch) {
-	  return function impureFinalPropsSelector(state, ownProps) {
-	    return mergeProps(mapStateToProps(state, ownProps), mapDispatchToProps(dispatch, ownProps), ownProps);
-	  };
-	}
-	
-	function pureFinalPropsSelectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, _ref) {
-	  var areStatesEqual = _ref.areStatesEqual,
-	      areOwnPropsEqual = _ref.areOwnPropsEqual,
-	      areStatePropsEqual = _ref.areStatePropsEqual;
-	
-	  var hasRunAtLeastOnce = false;
-	  var state = void 0;
-	  var ownProps = void 0;
-	  var stateProps = void 0;
-	  var dispatchProps = void 0;
-	  var mergedProps = void 0;
-	
-	  function handleFirstCall(firstState, firstOwnProps) {
-	    state = firstState;
-	    ownProps = firstOwnProps;
-	    stateProps = mapStateToProps(state, ownProps);
-	    dispatchProps = mapDispatchToProps(dispatch, ownProps);
-	    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
-	    hasRunAtLeastOnce = true;
-	    return mergedProps;
-	  }
-	
-	  function handleNewPropsAndNewState() {
-	    stateProps = mapStateToProps(state, ownProps);
-	
-	    if (mapDispatchToProps.dependsOnOwnProps) dispatchProps = mapDispatchToProps(dispatch, ownProps);
-	
-	    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
-	    return mergedProps;
-	  }
-	
-	  function handleNewProps() {
-	    if (mapStateToProps.dependsOnOwnProps) stateProps = mapStateToProps(state, ownProps);
-	
-	    if (mapDispatchToProps.dependsOnOwnProps) dispatchProps = mapDispatchToProps(dispatch, ownProps);
-	
-	    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
-	    return mergedProps;
-	  }
-	
-	  function handleNewState() {
-	    var nextStateProps = mapStateToProps(state, ownProps);
-	    var statePropsChanged = !areStatePropsEqual(nextStateProps, stateProps);
-	    stateProps = nextStateProps;
-	
-	    if (statePropsChanged) mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
-	
-	    return mergedProps;
-	  }
-	
-	  function handleSubsequentCalls(nextState, nextOwnProps) {
-	    var propsChanged = !areOwnPropsEqual(nextOwnProps, ownProps);
-	    var stateChanged = !areStatesEqual(nextState, state);
-	    state = nextState;
-	    ownProps = nextOwnProps;
-	
-	    if (propsChanged && stateChanged) return handleNewPropsAndNewState();
-	    if (propsChanged) return handleNewProps();
-	    if (stateChanged) return handleNewState();
-	    return mergedProps;
-	  }
-	
-	  return function pureFinalPropsSelector(nextState, nextOwnProps) {
-	    return hasRunAtLeastOnce ? handleSubsequentCalls(nextState, nextOwnProps) : handleFirstCall(nextState, nextOwnProps);
-	  };
-	}
-	
-	// TODO: Add more comments
-	
-	// If pure is true, the selector returned by selectorFactory will memoize its results,
-	// allowing connectAdvanced's shouldComponentUpdate to return false if final
-	// props have not changed. If false, the selector will always return a new
-	// object and shouldComponentUpdate will always return true.
-	
-	function finalPropsSelectorFactory(dispatch, _ref2) {
-	  var initMapStateToProps = _ref2.initMapStateToProps,
-	      initMapDispatchToProps = _ref2.initMapDispatchToProps,
-	      initMergeProps = _ref2.initMergeProps,
-	      options = _objectWithoutProperties(_ref2, ['initMapStateToProps', 'initMapDispatchToProps', 'initMergeProps']);
-	
-	  var mapStateToProps = initMapStateToProps(dispatch, options);
-	  var mapDispatchToProps = initMapDispatchToProps(dispatch, options);
-	  var mergeProps = initMergeProps(dispatch, options);
-	
-	  if (process.env.NODE_ENV !== 'production') {
-	    (0, _verifySubselectors2.default)(mapStateToProps, mapDispatchToProps, mergeProps, options.displayName);
-	  }
-	
-	  var selectorFactory = options.pure ? pureFinalPropsSelectorFactory : impureFinalPropsSelectorFactory;
-	
-	  return selectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, options);
-	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 224 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	exports.default = verifySubselectors;
-	
-	var _warning = __webpack_require__(212);
-	
-	var _warning2 = _interopRequireDefault(_warning);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function verify(selector, methodName, displayName) {
-	  if (!selector) {
-	    throw new Error('Unexpected value for ' + methodName + ' in ' + displayName + '.');
-	  } else if (methodName === 'mapStateToProps' || methodName === 'mapDispatchToProps') {
-	    if (!selector.hasOwnProperty('dependsOnOwnProps')) {
-	      (0, _warning2.default)('The selector for ' + methodName + ' of ' + displayName + ' did not specify a value for dependsOnOwnProps.');
-	    }
-	  }
-	}
-	
-	function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, displayName) {
-	  verify(mapStateToProps, 'mapStateToProps', displayName);
-	  verify(mapDispatchToProps, 'mapDispatchToProps', displayName);
-	  verify(mergeProps, 'mergeProps', displayName);
-	}
-
-/***/ },
-/* 225 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _reactRedux = __webpack_require__(208);
-	
-	var _Lasertank = __webpack_require__(226);
-	
-	var _Lasertank2 = _interopRequireDefault(_Lasertank);
-	
-	var _boardActions = __webpack_require__(204);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    board: state.game.board.present,
-	    laser: state.game.laser,
-	    levelNumber: state.game.levelNumber,
-	    score: state.score,
-	    gameOver: state.game.gameOver,
-	    won: state.game.won,
-	    levelDifficulty: state.game.levelDifficulty,
-	    levelMessage: state.game.levelMessage
-	  };
-	};
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    moveUp: function moveUp() {
-	      return dispatch((0, _boardActions.moveUp)());
-	    },
-	    moveDown: function moveDown() {
-	      return dispatch((0, _boardActions.moveDown)());
-	    },
-	    moveLeft: function moveLeft() {
-	      return dispatch((0, _boardActions.moveLeft)());
-	    },
-	    moveRight: function moveRight() {
-	      return dispatch((0, _boardActions.moveRight)());
-	    },
-	    shootUp: function shootUp(board, x, y) {
-	      return dispatch((0, _boardActions.shootUp)(board, x, y));
-	    },
-	    shootDown: function shootDown(board, x, y) {
-	      return dispatch((0, _boardActions.shootDown)(board, x, y));
-	    },
-	    shootLeft: function shootLeft(board, x, y) {
-	      return dispatch((0, _boardActions.shootLeft)(board, x, y));
-	    },
-	    shootRight: function shootRight(board, x, y) {
-	      return dispatch((0, _boardActions.shootRight)(board, x, y));
-	    },
-	    moveLaserForward: function moveLaserForward() {
-	      return dispatch((0, _boardActions.moveLaserForward)());
-	    },
-	    setLevel: function setLevel(levelNumber) {
-	      return dispatch((0, _boardActions.setLevel)(levelNumber));
-	    },
-	    resetLevel: function resetLevel() {
-	      return dispatch((0, _boardActions.resetLevel)());
-	    },
-	    undo: function undo() {
-	      return dispatch((0, _boardActions.undo)());
-	    },
-	    moveTank: function moveTank(dx, dy) {
-	      return dispatch((0, _boardActions.moveTank)(dx, dy));
-	    },
-	    shootLaser: function shootLaser(board, x, y, dx, dy) {
-	      return dispatch((0, _boardActions.shootLaser)(board, x, y, dx, dy));
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Lasertank2.default);
-
-/***/ },
-/* 226 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _board = __webpack_require__(205);
-	
-	var _Game = __webpack_require__(227);
-	
-	var _Game2 = _interopRequireDefault(_Game);
-	
-	var _Rectangle = __webpack_require__(228);
-	
-	var _Rectangle2 = _interopRequireDefault(_Rectangle);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Lasertank = function (_React$Component) {
-	  _inherits(Lasertank, _React$Component);
-	
-	  function Lasertank(props) {
-	    _classCallCheck(this, Lasertank);
-	
-	    return _possibleConstructorReturn(this, (Lasertank.__proto__ || Object.getPrototypeOf(Lasertank)).call(this, props));
-	  }
-	
-	  _createClass(Lasertank, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var _this2 = this;
-	
-	      this.props.setLevel(1);
-	
-	      window.addEventListener("keydown", function (e) {
-	        var _props = _this2.props,
-	            laser = _props.laser,
-	            board = _props.board;
-	
-	        if (laser && laser.x !== null && laser.y !== null) {
-	          console.log('Can not move while laser on board!');
-	          return null;
-	        }
-	        if (!board) return null;
-	
-	        var _findTank = (0, _board.findTank)(board),
-	            tankX = _findTank.tankX,
-	            tankY = _findTank.tankY;
-	
-	        switch (e.keyCode) {
-	          case 65:
-	            _this2.props.shootLeft(board, tankX, tankY);
-	            break;
-	          case 37:
-	            _this2.props.moveLeft();
-	            break;
-	          case 68:
-	            _this2.props.shootRight(board, tankX, tankY);
-	            break;
-	          case 39:
-	            _this2.props.moveRight();
-	            break;
-	          case 87:
-	            _this2.props.shootUp(board, tankX, tankY);
-	            break;
-	          case 38:
-	            _this2.props.moveUp();
-	            break;
-	          case 83:
-	            _this2.props.shootDown(board, tankX, tankY);
-	            break;
-	          case 40:
-	            _this2.props.moveDown();
-	            break;
-	        }
-	      });
-	      var canvas = document.getElementById("board");
-	      canvas.addEventListener('click', function (e) {
-	        var x = Math.floor(e.layerX / 60);
-	        var y = Math.floor(e.layerY / 60);
-	        console.log('click:', x, y);
-	
-	        var _props2 = _this2.props,
-	            laser = _props2.laser,
-	            board = _props2.board;
-	
-	        if (laser && laser.x !== null && laser.y !== null) {
-	          console.log('Can not move while laser on board!');
-	          return null;
-	        }
-	
-	        var moves = (0, _board.findPath)(board, x, y);
-	        if (moves.length === 0) {
-	          console.log('Can not move there');
-	          return;
-	        }
-	
-	        var tankX = moves[0][0];
-	        var tankY = moves[0][1];
-	        var dx = void 0,
-	            dy = void 0;
-	        moves.slice(1).forEach(function (pos, idx) {
-	          setTimeout(function () {
-	            _this2.moving = true;
-	            dx = pos[0] - tankX;
-	            dy = pos[1] - tankY;
-	
-	            var _pos = _slicedToArray(pos, 2);
-	
-	            tankX = _pos[0];
-	            tankY = _pos[1];
-	
-	            _this2.props.moveTank(dx, dy);
-	            _this2.moving = false;
-	          }, 100 * idx);
-	        });
-	      });
-	
-	      canvas.addEventListener('contextmenu', function (e) {
-	        e.preventDefault();
-	
-	        var _props3 = _this2.props,
-	            laser = _props3.laser,
-	            board = _props3.board;
-	
-	        if (laser && laser.x && laser.y) {
-	          console.log('Can not shoot while laser on board!');
-	          return null;
-	        }
-	
-	        if (_this2.moving) {
-	          console.log('Can not shoot while moving');
-	          return null;
-	        }
-	        var x = Math.floor(e.layerX / 60);
-	        var y = Math.floor(e.layerY / 60);
-	
-	        var _findTank2 = (0, _board.findTank)(_this2.props.board),
-	            tankX = _findTank2.tankX,
-	            tankY = _findTank2.tankY;
-	
-	        var dx = tankX - x;
-	        var dy = tankY - y;
-	        if (Math.abs(dx) < Math.abs(dy)) {
-	          if (dy > 0) {
-	            _this2.props.shootUp(board, tankX, tankY);
-	          } else {
-	            _this2.props.shootDown(board, tankX, tankY);
-	          }
-	        } else {
-	          if (dx < 0) {
-	            _this2.props.shootRight(board, tankX, tankY);
-	          } else {
-	            _this2.props.shootLeft(board, tankX, tankY);
-	          }
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
-	      var _props4 = this.props,
-	          laser = _props4.laser,
-	          board = _props4.board;
-	
-	      if (laser && laser.x !== null && laser.y !== null) {
-	        setTimeout(this.props.moveLaserForward, 50);
-	      }
-	
-	      if (this.props.won) {
-	        this.props.setLevel(this.props.levelNumber + 1);
-	      }
-	    }
-	  }, {
-	    key: 'generateTiles',
-	    value: function generateTiles() {
-	      var _props5 = this.props,
-	          laser = _props5.laser,
-	          board = _props5.board;
-	
-	      var tiles = [];
-	
-	      board.forEach(function (row, rowIdx) {
-	        row.forEach(function (el, colIdx) {
-	          var laserOver = false;
-	          if (laser && laser.x === colIdx && laser.y === rowIdx) {
-	            laserOver = true;
-	          }
-	
-	          tiles.push(_react2.default.createElement(_Rectangle2.default, {
-	            key: colIdx + '-' + rowIdx,
-	            object: el,
-	            x: colIdx * 120,
-	            y: rowIdx * 120,
-	            w: 120,
-	            h: 120,
-	            laserOver: laserOver }));
-	        });
-	      });
-	
-	      if (laser && laser.x !== null && laser.y !== null) {
-	        tiles.push(_react2.default.createElement(_Rectangle2.default, {
-	          key: 'laser',
-	          object: 'L',
-	          x: laser.x * 120 + 40,
-	          y: laser.y * 120 + 40,
-	          w: 40,
-	          h: 40 }));
-	      }
-	
-	      return tiles;
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'main' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'header' },
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'logo' },
-	            'PuzzleBall Game'
-	          ),
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'sub-title' },
-	            'inspired by ',
-	            _react2.default.createElement(
-	              'a',
-	              { target: '_blank', href: 'http://perso.cgocable.ca/lasertank/ltank_en.html' },
-	              'LaserTank'
-	            ),
-	            ' game'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'game' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'game-control' },
-	            _react2.default.createElement(
-	              'button',
-	              {
-	                className: 'reset-button',
-	                onClick: this.props.resetLevel },
-	              'Reset'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              {
-	                className: 'next-button',
-	                onClick: this.props.setLevel.bind(null, this.props.levelNumber + 1) },
-	              'Next Level'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              {
-	                className: 'prev-button',
-	                onClick: this.props.setLevel.bind(null, this.props.levelNumber - 1) },
-	              'Prev Level'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              {
-	                className: 'undo-button',
-	                onClick: this.props.undo },
-	              'Undo'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'control-info' },
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                'Move'
-	              ),
-	              _react2.default.createElement('img', { src: './frontend/sprites/mouse.svg', alt: 'mouse' }),
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                'Shoot'
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            _Game2.default,
-	            null,
-	            this.generateTiles()
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'level-status' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-number-label' },
-	              'Level Number'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-number-value' },
-	              this.props.levelNumber
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-difficulty-label' },
-	              'Difficulty'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-author-value' },
-	              this.props.levelDifficulty
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-moves-label' },
-	              'Moves'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-moves-value' },
-	              this.props.score.moves
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-shots-label' },
-	              'Shots'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-shots-value' },
-	              this.props.score.shots
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-hint-label' },
-	              'Hint'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'level-hint-value' },
-	              this.props.levelMessage
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Lasertank;
-	}(_react2.default.Component);
-	
-	exports.default = Lasertank;
-
-/***/ },
-/* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Game = function (_React$Component) {
-	  _inherits(Game, _React$Component);
-	
-	  function Game(props) {
-	    _classCallCheck(this, Game);
-	
-	    var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
-	
-	    _this.state = {
-	      ctx: null
-	    };
-	    return _this;
-	  }
-	
-	  _createClass(Game, [{
-	    key: "componentDidMount",
-	    value: function componentDidMount() {
-	      var c = document.getElementById("board");
-	      var ctx = c.getContext("2d");
-	
-	      this.setState({ ctx: ctx });
-	    }
-	  }, {
-	    key: "mapChildren",
-	    value: function mapChildren() {
-	      var _this2 = this;
-	
-	      return _react2.default.Children.map(this.props.children, function (child) {
-	        return _react2.default.cloneElement(child, {
-	          ctx: _this2.state.ctx
-	        });
-	      });
-	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
-	        "canvas",
-	        { id: "board", width: "1200px", height: "1200px" },
-	        this.state.ctx ? this.mapChildren() : []
-	      );
-	    }
-	  }]);
-	
-	  return Game;
-	}(_react2.default.Component);
-	
-	exports.default = Game;
-
-/***/ },
-/* 228 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _sprites = __webpack_require__(230);
-	
-	var Sprites = _interopRequireWildcard(_sprites);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var propTypes = {
-	  ctx: _react2.default.PropTypes.instanceOf(CanvasRenderingContext2D),
-	  color: _react2.default.PropTypes.string,
-	  x: _react2.default.PropTypes.number,
-	  y: _react2.default.PropTypes.number,
-	  w: _react2.default.PropTypes.number,
-	  h: _react2.default.PropTypes.number
-	};
-	
-	var Rectangle = function (_React$Component) {
-	  _inherits(Rectangle, _React$Component);
-	
-	  function Rectangle(props) {
-	    _classCallCheck(this, Rectangle);
-	
-	    return _possibleConstructorReturn(this, (Rectangle.__proto__ || Object.getPrototypeOf(Rectangle)).call(this, props));
-	  }
-	
-	  _createClass(Rectangle, [{
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      return this.props.object !== nextProps.object || this.props.x !== nextProps.x || this.props.y !== nextProps.y || this.props.laserOver !== nextProps.laserOver;
-	    }
-	  }, {
-	    key: 'clearSelf',
-	    value: function clearSelf() {
-	      var _props = this.props,
-	          ctx = _props.ctx,
-	          x = _props.x,
-	          y = _props.y,
-	          w = _props.w,
-	          h = _props.h;
-	
-	      ctx.clearRect(x, y, w, h);
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {}
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _props2 = this.props,
-	          ctx = _props2.ctx,
-	          object = _props2.object,
-	          x = _props2.x,
-	          y = _props2.y,
-	          w = _props2.w,
-	          h = _props2.h,
-	          laserOver = _props2.laserOver;
-	
-	
-	      switch (object) {
-	        case 'S':
-	          Sprites.drawGround(ctx, x, y, w, h);
-	          Sprites.drawSolidBlock(ctx, x, y, w, h);
-	          break;
-	        case 'T':
-	          Sprites.drawGround(ctx, x, y, w, h);
-	          Sprites.drawTank(ctx, x, y, w, h);
-	          break;
-	        case 'F':
-	          Sprites.drawGround(ctx, x, y, w, h);
-	          Sprites.drawFlag(ctx, x, y, w, h);
-	          break;
-	        case 'M':
-	          Sprites.drawGround(ctx, x, y, w, h);
-	          Sprites.drawMovableBlock(ctx, x, y, w, h);
-	          break;
-	        case 'W':
-	          Sprites.drawWater(ctx, x, y, w, h);
-	          break;
-	        case 'L':
-	          Sprites.drawLaser(ctx, x, y, w, h);
-	          break;
-	        default:
-	          Sprites.drawGround(ctx, x, y, w, h);
-	          break;
-	      }
-	
-	      return null;
-	    }
-	  }]);
-	
-	  return Rectangle;
-	}(_react2.default.Component);
-	
-	exports.default = Rectangle;
-
-/***/ },
-/* 229 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _deepFreeze = __webpack_require__(203);
-	
-	var _deepFreeze2 = _interopRequireDefault(_deepFreeze);
-	
-	var _boardActions = __webpack_require__(204);
-	
-	var _board = __webpack_require__(205);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var _nullState = {
-	  board: {
-	    past: [],
-	    present: [[]]
-	  },
-	  laser: {},
-	  levels: {},
-	  levelNumber: 0,
-	  gameOver: false,
-	  won: false
-	};
-	
-	var gameReducer = function gameReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _nullState;
-	  var action = arguments[1];
-	
-	  (0, _deepFreeze2.default)(state);
-	  var board = (0, _board.deepDupBoard)(state.board.present);
-	  var dupPast = state.board.past.slice();
-	  var laser = state.laser;
-	
-	  var newBoard = void 0,
-	      newState = void 0;
-	
-	  switch (action.type) {
-	    case _boardActions.UNDO:
-	      if (state.board.past.length === 0) return state;
-	      var previous = dupPast[dupPast.length - 1];
-	      var undoPast = dupPast.slice(0, dupPast.length - 1);
-	      return _extends({}, state, {
-	        board: {
-	          past: undoPast,
-	          present: previous
-	        }
-	      });
-	    case _boardActions.SET_LEVEL:
-	      if (!state.levels[action.levelNumber]) return state;
-	      return _extends({}, state, {
-	        board: {
-	          past: [],
-	          present: state.levels[action.levelNumber].initialBoard
-	        },
-	        levelNumber: action.levelNumber,
-	        levelDifficulty: state.levels[action.levelNumber].difficulty,
-	        levelMessage: state.levels[action.levelNumber].message,
-	        gameOver: false,
-	        won: false
-	      });
-	    case _boardActions.RESET_LEVEL:
-	      return _extends({}, state, {
-	        board: {
-	          past: [],
-	          present: state.levels[state.levelNumber].initialBoard
-	        },
-	        gameOver: false,
-	        won: false
-	      });
-	    case _boardActions.MOVE_TANK:
-	      dupPast.push(state.board.present);
-	      var _dx = action.dx,
-	          _dy = action.dy;
-	
-	      newState = (0, _board.tryToMoveTank)(board, _dx, _dy);
-	
-	      newState.board['past'] = dupPast;
-	      return _extends({}, state, newState);
-	    case _boardActions.MOVE_LASER:
-	      dupPast.push(state.board.present);
-	      var x = action.x,
-	          y = action.y,
-	          _dx = action.dx,
-	          _dy = action.dy;
-	
-	      newState = (0, _board.tryToMoveLaser)(board, x, y, _dx, _dy);
-	      newState.board['past'] = dupPast;
-	      return _extends({}, state, newState);
-	    case _boardActions.MOVE_LASER_FORWARD:
-	      var _state$laser = state.laser,
-	          x = _state$laser.x,
-	          y = _state$laser.y,
-	          _dx = _state$laser.dx,
-	          _dy = _state$laser.dy;
-	
-	      newState = (0, _board.tryToMoveLaser)(board, x, y, _dx, _dy);
-	      newState.board['past'] = dupPast;
-	      return _extends({}, state, newState);
-	    default:
-	      return state;
-	  }
-	};
-	
-	exports.default = gameReducer;
-
-/***/ },
-/* 230 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var drawSolidBlock = exports.drawSolidBlock = function drawSolidBlock(ctx, x, y, w, h) {
-	  var color = '#A2A9AF';
-	
-	  ctx.fillStyle = color;
-	  ctx.fillRect(x, y, w, h);
-	
-	  ctx.shadowOffsetX = 2;
-	  ctx.shadowOffsetY = 2;
-	  ctx.shadowBlur = 1;
-	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	
-	  color = '#747E80';
-	  ctx.fillStyle = color;
-	  ctx.fillRect(x + 3, y + 3, w - 8, h - 8);
-	  clearShadows(ctx);
-	};
-	
-	var drawTank = exports.drawTank = function drawTank(ctx, x, y, w, h) {
-	  var color = '#A2A9AF';
-	  ctx.fillStyle = color;
-	  ctx.fillRect(x, y, w, h);
-	  ctx.shadowOffsetX = 2;
-	  ctx.shadowOffsetY = 2;
-	  ctx.shadowBlur = 1;
-	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  color = '#009A31';
-	  ctx.beginPath();
-	  ctx.fillStyle = color;
-	  ctx.arc(x + 60, y + 60, 40, 0, 2 * Math.PI, false);
-	  ctx.fill();
-	  clearShadows(ctx);
-	};
-	
-	var drawFlag = exports.drawFlag = function drawFlag(ctx, x, y, w, h) {
-	  var color = '#E5446D';
-	  ctx.shadowOffsetX = 2;
-	  ctx.shadowOffsetY = 2;
-	  ctx.shadowBlur = 5;
-	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  ctx.fillStyle = color;
-	  ctx.fillRect(x + 25, y + 20, 5, 90);
-	  ctx.beginPath();
-	  ctx.moveTo(x + 35, y + 25);
-	  ctx.lineTo(x + 95, y + 25);
-	  ctx.lineTo(x + 75, y + 45);
-	  ctx.lineTo(x + 95, y + 65);
-	  ctx.lineTo(x + 35, y + 65);
-	  ctx.fill();
-	
-	  clearShadows(ctx);
-	};
-	
-	var drawLaser = exports.drawLaser = function drawLaser(ctx, x, y, w, h) {
-	  ctx.shadowOffsetX = 1;
-	  ctx.shadowOffsetY = 1;
-	  ctx.shadowBlur = 2;
-	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  var color = "#009A31";
-	  ctx.beginPath();
-	  ctx.arc(x + 20, y + 20, w / 2, 0, 2 * Math.PI, false);
-	  ctx.closePath();
-	  ctx.fillStyle = color;
-	  ctx.fill();
-	
-	  clearShadows(ctx);
-	};
-	
-	var drawMovableBlock = exports.drawMovableBlock = function drawMovableBlock(ctx, x, y, w, h) {
-	  ctx.shadowOffsetX = 2;
-	  ctx.shadowOffsetY = 2;
-	  ctx.shadowBlur = 10;
-	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  var color = '#EDAA53';
-	  ctx.fillStyle = color;
-	  ctx.fillRect(x + 10, y + 10, w - 20, h - 20);
-	  clearShadows(ctx);
-	};
-	
-	var drawGround = exports.drawGround = function drawGround(ctx, x, y, w, h) {
-	  var color = '#A2A9AF';
-	  ctx.fillStyle = color;
-	  ctx.fillRect(x, y, w, h);
-	};
-	
-	var drawWater = exports.drawWater = function drawWater(ctx, x, y, w, h) {
-	  ctx.shadowOffsetX = 0;
-	  ctx.shadowOffsetY = 0;
-	  ctx.shadowBlur = 0;
-	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	  var color = '#1B6AA5';
-	  ctx.fillStyle = color;
-	  ctx.fillRect(x, y, w, h);
-	  clearShadows(ctx);
-	};
-	
-	var clearShadows = function clearShadows(ctx) {
-	  ctx.shadowOffsetX = 0;
-	  ctx.shadowOffsetY = 0;
-	  ctx.shadowBlur = 0;
-	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-	};
-
-/***/ },
-/* 231 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _deepFreeze = __webpack_require__(203);
-	
-	var _deepFreeze2 = _interopRequireDefault(_deepFreeze);
-	
-	var _boardActions = __webpack_require__(204);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var _nullScore = {
-	  moves: 0,
-	  shots: 0
-	};
-	
-	var scoreReducer = function scoreReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _nullScore;
-	  var action = arguments[1];
-	
-	  (0, _deepFreeze2.default)(state);
-	
-	  switch (action.type) {
-	    case _boardActions.RESET_LEVEL:
-	    case _boardActions.SET_LEVEL:
-	      return {
-	        moves: 0,
-	        shots: 0
-	      };
-	    case _boardActions.MOVE_TANK:
-	      return _extends({}, state, {
-	        moves: state.moves + 1
-	      });
-	    case _boardActions.MOVE_LASER:
-	      return _extends({}, state, {
-	        shots: state.shots + 1
-	      });
-	    default:
-	      return state;
-	  }
-	};
-	
-	exports.default = scoreReducer;
-
-/***/ },
-/* 232 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(233);
-
-
-/***/ },
-/* 233 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    'Heap'                      : __webpack_require__(234),
-	    'Node'                      : __webpack_require__(236),
-	    'Grid'                      : __webpack_require__(237),
-	    'Util'                      : __webpack_require__(239),
-	    'DiagonalMovement'          : __webpack_require__(238),
-	    'Heuristic'                 : __webpack_require__(240),
-	    'AStarFinder'               : __webpack_require__(241),
-	    'BestFirstFinder'           : __webpack_require__(242),
-	    'BreadthFirstFinder'        : __webpack_require__(243),
-	    'DijkstraFinder'            : __webpack_require__(244),
-	    'BiAStarFinder'             : __webpack_require__(245),
-	    'BiBestFirstFinder'         : __webpack_require__(246),
-	    'BiBreadthFirstFinder'      : __webpack_require__(247),
-	    'BiDijkstraFinder'          : __webpack_require__(248),
-	    'IDAStarFinder'             : __webpack_require__(249),
-	    'JumpPointFinder'           : __webpack_require__(250),
-	};
-
-
-/***/ },
-/* 234 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(235);
-
-
-/***/ },
-/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {// Generated by CoffeeScript 1.8.0
@@ -25627,7 +23584,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(193)(module)))
 
 /***/ },
-/* 236 */
+/* 210 */
 /***/ function(module, exports) {
 
 	/**
@@ -25661,11 +23618,11 @@
 
 
 /***/ },
-/* 237 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Node = __webpack_require__(236);
-	var DiagonalMovement = __webpack_require__(238);
+	var Node = __webpack_require__(210);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * The Grid class, which serves as the encapsulation of the layout of the nodes.
@@ -25912,7 +23869,7 @@
 
 
 /***/ },
-/* 238 */
+/* 212 */
 /***/ function(module, exports) {
 
 	var DiagonalMovement = {
@@ -25925,7 +23882,7 @@
 	module.exports = DiagonalMovement;
 
 /***/ },
-/* 239 */
+/* 213 */
 /***/ function(module, exports) {
 
 	/**
@@ -26177,7 +24134,7 @@
 
 
 /***/ },
-/* 240 */
+/* 214 */
 /***/ function(module, exports) {
 
 	/**
@@ -26231,13 +24188,13 @@
 
 
 /***/ },
-/* 241 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Heap       = __webpack_require__(234);
-	var Util       = __webpack_require__(239);
-	var Heuristic  = __webpack_require__(240);
-	var DiagonalMovement = __webpack_require__(238);
+	var Heap       = __webpack_require__(208);
+	var Util       = __webpack_require__(213);
+	var Heuristic  = __webpack_require__(214);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * A* path-finder. Based upon https://github.com/bgrins/javascript-astar
@@ -26363,10 +24320,10 @@
 
 
 /***/ },
-/* 242 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AStarFinder = __webpack_require__(241);
+	var AStarFinder = __webpack_require__(215);
 	
 	/**
 	 * Best-First-Search path-finder.
@@ -26397,11 +24354,11 @@
 
 
 /***/ },
-/* 243 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Util = __webpack_require__(239);
-	var DiagonalMovement = __webpack_require__(238);
+	var Util = __webpack_require__(213);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * Breadth-First-Search path finder.
@@ -26482,10 +24439,10 @@
 
 
 /***/ },
-/* 244 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AStarFinder = __webpack_require__(241);
+	var AStarFinder = __webpack_require__(215);
 	
 	/**
 	 * Dijkstra path-finder.
@@ -26512,13 +24469,13 @@
 
 
 /***/ },
-/* 245 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Heap       = __webpack_require__(234);
-	var Util       = __webpack_require__(239);
-	var Heuristic  = __webpack_require__(240);
-	var DiagonalMovement = __webpack_require__(238);
+	var Heap       = __webpack_require__(208);
+	var Util       = __webpack_require__(213);
+	var Heuristic  = __webpack_require__(214);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * A* path-finder.
@@ -26699,10 +24656,10 @@
 
 
 /***/ },
-/* 246 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BiAStarFinder = __webpack_require__(245);
+	var BiAStarFinder = __webpack_require__(219);
 	
 	/**
 	 * Bi-direcitional Best-First-Search path-finder.
@@ -26733,11 +24690,11 @@
 
 
 /***/ },
-/* 247 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Util = __webpack_require__(239);
-	var DiagonalMovement = __webpack_require__(238);
+	var Util = __webpack_require__(213);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * Bi-directional Breadth-First-Search path finder.
@@ -26854,10 +24811,10 @@
 
 
 /***/ },
-/* 248 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BiAStarFinder = __webpack_require__(245);
+	var BiAStarFinder = __webpack_require__(219);
 	
 	/**
 	 * Bi-directional Dijkstra path-finder.
@@ -26884,13 +24841,13 @@
 
 
 /***/ },
-/* 249 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Util       = __webpack_require__(239);
-	var Heuristic  = __webpack_require__(240);
-	var Node       = __webpack_require__(236);
-	var DiagonalMovement = __webpack_require__(238);
+	var Util       = __webpack_require__(213);
+	var Heuristic  = __webpack_require__(214);
+	var Node       = __webpack_require__(210);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * Iterative Deeping A Star (IDA*) path-finder.
@@ -27099,17 +25056,17 @@
 
 
 /***/ },
-/* 250 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * @author aniero / https://github.com/aniero
 	 */
-	var DiagonalMovement = __webpack_require__(238);
-	var JPFNeverMoveDiagonally = __webpack_require__(251);
-	var JPFAlwaysMoveDiagonally = __webpack_require__(253);
-	var JPFMoveDiagonallyIfNoObstacles = __webpack_require__(254);
-	var JPFMoveDiagonallyIfAtMostOneObstacle = __webpack_require__(255);
+	var DiagonalMovement = __webpack_require__(212);
+	var JPFNeverMoveDiagonally = __webpack_require__(225);
+	var JPFAlwaysMoveDiagonally = __webpack_require__(227);
+	var JPFMoveDiagonallyIfNoObstacles = __webpack_require__(228);
+	var JPFMoveDiagonallyIfAtMostOneObstacle = __webpack_require__(229);
 	
 	/**
 	 * Path finder using the Jump Point Search algorithm
@@ -27136,14 +25093,14 @@
 
 
 /***/ },
-/* 251 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * @author imor / https://github.com/imor
 	 */
-	var JumpPointFinderBase = __webpack_require__(252);
-	var DiagonalMovement = __webpack_require__(238);
+	var JumpPointFinderBase = __webpack_require__(226);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * Path finder using the Jump Point Search algorithm allowing only horizontal
@@ -27262,16 +25219,16 @@
 
 
 /***/ },
-/* 252 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * @author imor / https://github.com/imor
 	 */
-	var Heap       = __webpack_require__(234);
-	var Util       = __webpack_require__(239);
-	var Heuristic  = __webpack_require__(240);
-	var DiagonalMovement = __webpack_require__(238);
+	var Heap       = __webpack_require__(208);
+	var Util       = __webpack_require__(213);
+	var Heuristic  = __webpack_require__(214);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * Base class for the Jump Point Search algorithm
@@ -27382,14 +25339,14 @@
 
 
 /***/ },
-/* 253 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * @author imor / https://github.com/imor
 	 */
-	var JumpPointFinderBase = __webpack_require__(252);
-	var DiagonalMovement = __webpack_require__(238);
+	var JumpPointFinderBase = __webpack_require__(226);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * Path finder using the Jump Point Search algorithm which always moves
@@ -27537,14 +25494,14 @@
 
 
 /***/ },
-/* 254 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * @author imor / https://github.com/imor
 	 */
-	var JumpPointFinderBase = __webpack_require__(252);
-	var DiagonalMovement = __webpack_require__(238);
+	var JumpPointFinderBase = __webpack_require__(226);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * Path finder using the Jump Point Search algorithm which moves
@@ -27717,14 +25674,14 @@
 
 
 /***/ },
-/* 255 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * @author imor / https://github.com/imor
 	 */
-	var JumpPointFinderBase = __webpack_require__(252);
-	var DiagonalMovement = __webpack_require__(238);
+	var JumpPointFinderBase = __webpack_require__(226);
+	var DiagonalMovement = __webpack_require__(212);
 	
 	/**
 	 * Path finder using the Jump Point Search algorithm which moves
@@ -27876,6 +25833,2054 @@
 	
 	module.exports = JPFMoveDiagonallyIfAtMostOneObstacle;
 
+
+/***/ },
+/* 230 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _deepFreeze = __webpack_require__(203);
+	
+	var _deepFreeze2 = _interopRequireDefault(_deepFreeze);
+	
+	var _boardActions = __webpack_require__(204);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var _nullScore = {
+	  moves: 0,
+	  shots: 0
+	};
+	
+	var scoreReducer = function scoreReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _nullScore;
+	  var action = arguments[1];
+	
+	  (0, _deepFreeze2.default)(state);
+	
+	  switch (action.type) {
+	    case _boardActions.RESET_LEVEL:
+	    case _boardActions.SET_LEVEL:
+	      return {
+	        moves: 0,
+	        shots: 0
+	      };
+	    case _boardActions.MOVE_TANK:
+	      return _extends({}, state, {
+	        moves: state.moves + 1
+	      });
+	    case _boardActions.MOVE_LASER:
+	      return _extends({}, state, {
+	        shots: state.shots + 1
+	      });
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = scoreReducer;
+
+/***/ },
+/* 231 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(232);
+	
+	var _LasertankContainer = __webpack_require__(249);
+	
+	var _LasertankContainer2 = _interopRequireDefault(_LasertankContainer);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Root = function Root(_ref) {
+	  var store = _ref.store;
+	  return _react2.default.createElement(
+	    _reactRedux.Provider,
+	    { store: store },
+	    _react2.default.createElement(_LasertankContainer2.default, null)
+	  );
+	};
+	
+	exports.default = Root;
+
+/***/ },
+/* 232 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.connect = exports.connectAdvanced = exports.Provider = undefined;
+	
+	var _Provider = __webpack_require__(233);
+	
+	var _Provider2 = _interopRequireDefault(_Provider);
+	
+	var _connectAdvanced = __webpack_require__(237);
+	
+	var _connectAdvanced2 = _interopRequireDefault(_connectAdvanced);
+	
+	var _connect = __webpack_require__(240);
+	
+	var _connect2 = _interopRequireDefault(_connect);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.Provider = _Provider2.default;
+	exports.connectAdvanced = _connectAdvanced2.default;
+	exports.connect = _connect2.default;
+
+/***/ },
+/* 233 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	
+	exports.__esModule = true;
+	exports.default = undefined;
+	
+	var _react = __webpack_require__(1);
+	
+	var _Subscription = __webpack_require__(234);
+	
+	var _Subscription2 = _interopRequireDefault(_Subscription);
+	
+	var _storeShape = __webpack_require__(235);
+	
+	var _storeShape2 = _interopRequireDefault(_storeShape);
+	
+	var _warning = __webpack_require__(236);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var didWarnAboutReceivingStore = false;
+	function warnAboutReceivingStore() {
+	  if (didWarnAboutReceivingStore) {
+	    return;
+	  }
+	  didWarnAboutReceivingStore = true;
+	
+	  (0, _warning2.default)('<Provider> does not support changing `store` on the fly. ' + 'It is most likely that you see this error because you updated to ' + 'Redux 2.x and React Redux 2.x which no longer hot reload reducers ' + 'automatically. See https://github.com/reactjs/react-redux/releases/' + 'tag/v2.0.0 for the migration instructions.');
+	}
+	
+	var Provider = function (_Component) {
+	  _inherits(Provider, _Component);
+	
+	  Provider.prototype.getChildContext = function getChildContext() {
+	    return { store: this.store, storeSubscription: null };
+	  };
+	
+	  function Provider(props, context) {
+	    _classCallCheck(this, Provider);
+	
+	    var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
+	
+	    _this.store = props.store;
+	    return _this;
+	  }
+	
+	  Provider.prototype.render = function render() {
+	    return _react.Children.only(this.props.children);
+	  };
+	
+	  return Provider;
+	}(_react.Component);
+	
+	exports.default = Provider;
+	
+	
+	if (process.env.NODE_ENV !== 'production') {
+	  Provider.prototype.componentWillReceiveProps = function (nextProps) {
+	    var store = this.store;
+	    var nextStore = nextProps.store;
+	
+	
+	    if (store !== nextStore) {
+	      warnAboutReceivingStore();
+	    }
+	  };
+	}
+	
+	Provider.propTypes = {
+	  store: _storeShape2.default.isRequired,
+	  children: _react.PropTypes.element.isRequired
+	};
+	Provider.childContextTypes = {
+	  store: _storeShape2.default.isRequired,
+	  storeSubscription: _react.PropTypes.instanceOf(_Subscription2.default)
+	};
+	Provider.displayName = 'Provider';
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 234 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	// encapsulates the subscription logic for connecting a component to the redux store, as
+	// well as nesting subscriptions of descendant components, so that we can ensure the
+	// ancestor components re-render before descendants
+	
+	var CLEARED = null;
+	var nullListeners = {
+	  notify: function notify() {}
+	};
+	
+	function createListenerCollection() {
+	  // the current/next pattern is copied from redux's createStore code.
+	  // TODO: refactor+expose that code to be reusable here?
+	  var current = [];
+	  var next = [];
+	
+	  return {
+	    clear: function clear() {
+	      next = CLEARED;
+	      current = CLEARED;
+	    },
+	    notify: function notify() {
+	      var listeners = current = next;
+	      for (var i = 0; i < listeners.length; i++) {
+	        listeners[i]();
+	      }
+	    },
+	    subscribe: function subscribe(listener) {
+	      var isSubscribed = true;
+	      if (next === current) next = current.slice();
+	      next.push(listener);
+	
+	      return function unsubscribe() {
+	        if (!isSubscribed || current === CLEARED) return;
+	        isSubscribed = false;
+	
+	        if (next === current) next = current.slice();
+	        next.splice(next.indexOf(listener), 1);
+	      };
+	    }
+	  };
+	}
+	
+	var Subscription = function () {
+	  function Subscription(store, parentSub) {
+	    _classCallCheck(this, Subscription);
+	
+	    this.store = store;
+	    this.parentSub = parentSub;
+	    this.unsubscribe = null;
+	    this.listeners = nullListeners;
+	  }
+	
+	  Subscription.prototype.addNestedSub = function addNestedSub(listener) {
+	    this.trySubscribe();
+	    return this.listeners.subscribe(listener);
+	  };
+	
+	  Subscription.prototype.notifyNestedSubs = function notifyNestedSubs() {
+	    this.listeners.notify();
+	  };
+	
+	  Subscription.prototype.isSubscribed = function isSubscribed() {
+	    return Boolean(this.unsubscribe);
+	  };
+	
+	  Subscription.prototype.trySubscribe = function trySubscribe() {
+	    if (!this.unsubscribe) {
+	      // this.onStateChange is set by connectAdvanced.initSubscription()
+	      this.unsubscribe = this.parentSub ? this.parentSub.addNestedSub(this.onStateChange) : this.store.subscribe(this.onStateChange);
+	
+	      this.listeners = createListenerCollection();
+	    }
+	  };
+	
+	  Subscription.prototype.tryUnsubscribe = function tryUnsubscribe() {
+	    if (this.unsubscribe) {
+	      this.unsubscribe();
+	      this.unsubscribe = null;
+	      this.listeners.clear();
+	      this.listeners = nullListeners;
+	    }
+	  };
+	
+	  return Subscription;
+	}();
+	
+	exports.default = Subscription;
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	
+	var _react = __webpack_require__(1);
+	
+	exports.default = _react.PropTypes.shape({
+	  subscribe: _react.PropTypes.func.isRequired,
+	  dispatch: _react.PropTypes.func.isRequired,
+	  getState: _react.PropTypes.func.isRequired
+	});
+
+/***/ },
+/* 236 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.default = warning;
+	/**
+	 * Prints a warning in the console if it exists.
+	 *
+	 * @param {String} message The warning message.
+	 * @returns {void}
+	 */
+	function warning(message) {
+	  /* eslint-disable no-console */
+	  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+	    console.error(message);
+	  }
+	  /* eslint-enable no-console */
+	  try {
+	    // This error was thrown as a convenience so that if you enable
+	    // "break on all exceptions" in your console,
+	    // it would pause the execution at this line.
+	    throw new Error(message);
+	    /* eslint-disable no-empty */
+	  } catch (e) {}
+	  /* eslint-enable no-empty */
+	}
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	
+	exports.__esModule = true;
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.default = connectAdvanced;
+	
+	var _hoistNonReactStatics = __webpack_require__(238);
+	
+	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
+	
+	var _invariant = __webpack_require__(239);
+	
+	var _invariant2 = _interopRequireDefault(_invariant);
+	
+	var _react = __webpack_require__(1);
+	
+	var _Subscription = __webpack_require__(234);
+	
+	var _Subscription2 = _interopRequireDefault(_Subscription);
+	
+	var _storeShape = __webpack_require__(235);
+	
+	var _storeShape2 = _interopRequireDefault(_storeShape);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	var hotReloadingVersion = 0;
+	function connectAdvanced(
+	/*
+	  selectorFactory is a func that is responsible for returning the selector function used to
+	  compute new props from state, props, and dispatch. For example:
+	     export default connectAdvanced((dispatch, options) => (state, props) => ({
+	      thing: state.things[props.thingId],
+	      saveThing: fields => dispatch(actionCreators.saveThing(props.thingId, fields)),
+	    }))(YourComponent)
+	   Access to dispatch is provided to the factory so selectorFactories can bind actionCreators
+	  outside of their selector as an optimization. Options passed to connectAdvanced are passed to
+	  the selectorFactory, along with displayName and WrappedComponent, as the second argument.
+	   Note that selectorFactory is responsible for all caching/memoization of inbound and outbound
+	  props. Do not use connectAdvanced directly without memoizing results between calls to your
+	  selector, otherwise the Connect component will re-render on every state or props change.
+	*/
+	selectorFactory) {
+	  var _contextTypes, _childContextTypes;
+	
+	  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+	      _ref$getDisplayName = _ref.getDisplayName,
+	      getDisplayName = _ref$getDisplayName === undefined ? function (name) {
+	    return 'ConnectAdvanced(' + name + ')';
+	  } : _ref$getDisplayName,
+	      _ref$methodName = _ref.methodName,
+	      methodName = _ref$methodName === undefined ? 'connectAdvanced' : _ref$methodName,
+	      _ref$renderCountProp = _ref.renderCountProp,
+	      renderCountProp = _ref$renderCountProp === undefined ? undefined : _ref$renderCountProp,
+	      _ref$shouldHandleStat = _ref.shouldHandleStateChanges,
+	      shouldHandleStateChanges = _ref$shouldHandleStat === undefined ? true : _ref$shouldHandleStat,
+	      _ref$storeKey = _ref.storeKey,
+	      storeKey = _ref$storeKey === undefined ? 'store' : _ref$storeKey,
+	      _ref$withRef = _ref.withRef,
+	      withRef = _ref$withRef === undefined ? false : _ref$withRef,
+	      connectOptions = _objectWithoutProperties(_ref, ['getDisplayName', 'methodName', 'renderCountProp', 'shouldHandleStateChanges', 'storeKey', 'withRef']);
+	
+	  var subscriptionKey = storeKey + 'Subscription';
+	  var version = hotReloadingVersion++;
+	
+	  var contextTypes = (_contextTypes = {}, _contextTypes[storeKey] = _storeShape2.default, _contextTypes[subscriptionKey] = _react.PropTypes.instanceOf(_Subscription2.default), _contextTypes);
+	  var childContextTypes = (_childContextTypes = {}, _childContextTypes[subscriptionKey] = _react.PropTypes.instanceOf(_Subscription2.default), _childContextTypes);
+	
+	  return function wrapWithConnect(WrappedComponent) {
+	    (0, _invariant2.default)(typeof WrappedComponent == 'function', 'You must pass a component to the function returned by ' + ('connect. Instead received ' + WrappedComponent));
+	
+	    var wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
+	
+	    var displayName = getDisplayName(wrappedComponentName);
+	
+	    var selectorFactoryOptions = _extends({}, connectOptions, {
+	      getDisplayName: getDisplayName,
+	      methodName: methodName,
+	      renderCountProp: renderCountProp,
+	      shouldHandleStateChanges: shouldHandleStateChanges,
+	      storeKey: storeKey,
+	      withRef: withRef,
+	      displayName: displayName,
+	      wrappedComponentName: wrappedComponentName,
+	      WrappedComponent: WrappedComponent
+	    });
+	
+	    var Connect = function (_Component) {
+	      _inherits(Connect, _Component);
+	
+	      function Connect(props, context) {
+	        _classCallCheck(this, Connect);
+	
+	        var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
+	
+	        _this.version = version;
+	        _this.state = {};
+	        _this.renderCount = 0;
+	        _this.store = _this.props[storeKey] || _this.context[storeKey];
+	        _this.parentSub = props[subscriptionKey] || context[subscriptionKey];
+	
+	        _this.setWrappedInstance = _this.setWrappedInstance.bind(_this);
+	
+	        (0, _invariant2.default)(_this.store, 'Could not find "' + storeKey + '" in either the context or ' + ('props of "' + displayName + '". ') + 'Either wrap the root component in a <Provider>, ' + ('or explicitly pass "' + storeKey + '" as a prop to "' + displayName + '".'));
+	
+	        // make sure `getState` is properly bound in order to avoid breaking
+	        // custom store implementations that rely on the store's context
+	        _this.getState = _this.store.getState.bind(_this.store);
+	
+	        _this.initSelector();
+	        _this.initSubscription();
+	        return _this;
+	      }
+	
+	      Connect.prototype.getChildContext = function getChildContext() {
+	        var _ref2;
+	
+	        return _ref2 = {}, _ref2[subscriptionKey] = this.subscription || this.parentSub, _ref2;
+	      };
+	
+	      Connect.prototype.componentDidMount = function componentDidMount() {
+	        if (!shouldHandleStateChanges) return;
+	
+	        // componentWillMount fires during server side rendering, but componentDidMount and
+	        // componentWillUnmount do not. Because of this, trySubscribe happens during ...didMount.
+	        // Otherwise, unsubscription would never take place during SSR, causing a memory leak.
+	        // To handle the case where a child component may have triggered a state change by
+	        // dispatching an action in its componentWillMount, we have to re-run the select and maybe
+	        // re-render.
+	        this.subscription.trySubscribe();
+	        this.selector.run(this.props);
+	        if (this.selector.shouldComponentUpdate) this.forceUpdate();
+	      };
+	
+	      Connect.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	        this.selector.run(nextProps);
+	      };
+	
+	      Connect.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
+	        return this.selector.shouldComponentUpdate;
+	      };
+	
+	      Connect.prototype.componentWillUnmount = function componentWillUnmount() {
+	        if (this.subscription) this.subscription.tryUnsubscribe();
+	        // these are just to guard against extra memory leakage if a parent element doesn't
+	        // dereference this instance properly, such as an async callback that never finishes
+	        this.subscription = null;
+	        this.store = null;
+	        this.parentSub = null;
+	        this.selector.run = function () {};
+	      };
+	
+	      Connect.prototype.getWrappedInstance = function getWrappedInstance() {
+	        (0, _invariant2.default)(withRef, 'To access the wrapped instance, you need to specify ' + ('{ withRef: true } in the options argument of the ' + methodName + '() call.'));
+	        return this.wrappedInstance;
+	      };
+	
+	      Connect.prototype.setWrappedInstance = function setWrappedInstance(ref) {
+	        this.wrappedInstance = ref;
+	      };
+	
+	      Connect.prototype.initSelector = function initSelector() {
+	        var dispatch = this.store.dispatch;
+	        var getState = this.getState;
+	
+	        var sourceSelector = selectorFactory(dispatch, selectorFactoryOptions);
+	
+	        // wrap the selector in an object that tracks its results between runs
+	        var selector = this.selector = {
+	          shouldComponentUpdate: true,
+	          props: sourceSelector(getState(), this.props),
+	          run: function runComponentSelector(props) {
+	            try {
+	              var nextProps = sourceSelector(getState(), props);
+	              if (selector.error || nextProps !== selector.props) {
+	                selector.shouldComponentUpdate = true;
+	                selector.props = nextProps;
+	                selector.error = null;
+	              }
+	            } catch (error) {
+	              selector.shouldComponentUpdate = true;
+	              selector.error = error;
+	            }
+	          }
+	        };
+	      };
+	
+	      Connect.prototype.initSubscription = function initSubscription() {
+	        var _this2 = this;
+	
+	        if (shouldHandleStateChanges) {
+	          (function () {
+	            var subscription = _this2.subscription = new _Subscription2.default(_this2.store, _this2.parentSub);
+	            var dummyState = {};
+	
+	            subscription.onStateChange = function onStateChange() {
+	              this.selector.run(this.props);
+	
+	              if (!this.selector.shouldComponentUpdate) {
+	                subscription.notifyNestedSubs();
+	              } else {
+	                this.componentDidUpdate = function componentDidUpdate() {
+	                  this.componentDidUpdate = undefined;
+	                  subscription.notifyNestedSubs();
+	                };
+	
+	                this.setState(dummyState);
+	              }
+	            }.bind(_this2);
+	          })();
+	        }
+	      };
+	
+	      Connect.prototype.isSubscribed = function isSubscribed() {
+	        return Boolean(this.subscription) && this.subscription.isSubscribed();
+	      };
+	
+	      Connect.prototype.addExtraProps = function addExtraProps(props) {
+	        if (!withRef && !renderCountProp) return props;
+	        // make a shallow copy so that fields added don't leak to the original selector.
+	        // this is especially important for 'ref' since that's a reference back to the component
+	        // instance. a singleton memoized selector would then be holding a reference to the
+	        // instance, preventing the instance from being garbage collected, and that would be bad
+	        var withExtras = _extends({}, props);
+	        if (withRef) withExtras.ref = this.setWrappedInstance;
+	        if (renderCountProp) withExtras[renderCountProp] = this.renderCount++;
+	        return withExtras;
+	      };
+	
+	      Connect.prototype.render = function render() {
+	        var selector = this.selector;
+	        selector.shouldComponentUpdate = false;
+	
+	        if (selector.error) {
+	          throw selector.error;
+	        } else {
+	          return (0, _react.createElement)(WrappedComponent, this.addExtraProps(selector.props));
+	        }
+	      };
+	
+	      return Connect;
+	    }(_react.Component);
+	
+	    Connect.WrappedComponent = WrappedComponent;
+	    Connect.displayName = displayName;
+	    Connect.childContextTypes = childContextTypes;
+	    Connect.contextTypes = contextTypes;
+	    Connect.propTypes = contextTypes;
+	
+	    if (process.env.NODE_ENV !== 'production') {
+	      Connect.prototype.componentWillUpdate = function componentWillUpdate() {
+	        // We are hot reloading!
+	        if (this.version !== version) {
+	          this.version = version;
+	          this.initSelector();
+	
+	          if (this.subscription) this.subscription.tryUnsubscribe();
+	          this.initSubscription();
+	          if (shouldHandleStateChanges) this.subscription.trySubscribe();
+	        }
+	      };
+	    }
+	
+	    return (0, _hoistNonReactStatics2.default)(Connect, WrappedComponent);
+	  };
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 238 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2015, Yahoo! Inc.
+	 * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+	 */
+	'use strict';
+	
+	var REACT_STATICS = {
+	    childContextTypes: true,
+	    contextTypes: true,
+	    defaultProps: true,
+	    displayName: true,
+	    getDefaultProps: true,
+	    mixins: true,
+	    propTypes: true,
+	    type: true
+	};
+	
+	var KNOWN_STATICS = {
+	    name: true,
+	    length: true,
+	    prototype: true,
+	    caller: true,
+	    arguments: true,
+	    arity: true
+	};
+	
+	var isGetOwnPropertySymbolsAvailable = typeof Object.getOwnPropertySymbols === 'function';
+	
+	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
+	    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
+	        var keys = Object.getOwnPropertyNames(sourceComponent);
+	
+	        /* istanbul ignore else */
+	        if (isGetOwnPropertySymbolsAvailable) {
+	            keys = keys.concat(Object.getOwnPropertySymbols(sourceComponent));
+	        }
+	
+	        for (var i = 0; i < keys.length; ++i) {
+	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
+	                try {
+	                    targetComponent[keys[i]] = sourceComponent[keys[i]];
+	                } catch (error) {
+	
+	                }
+	            }
+	        }
+	    }
+	
+	    return targetComponent;
+	};
+
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	'use strict';
+	
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+	
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+	
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
+	      error.name = 'Invariant Violation';
+	    }
+	
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+	
+	module.exports = invariant;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.createConnect = createConnect;
+	
+	var _connectAdvanced = __webpack_require__(237);
+	
+	var _connectAdvanced2 = _interopRequireDefault(_connectAdvanced);
+	
+	var _shallowEqual = __webpack_require__(241);
+	
+	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
+	
+	var _mapDispatchToProps = __webpack_require__(242);
+	
+	var _mapDispatchToProps2 = _interopRequireDefault(_mapDispatchToProps);
+	
+	var _mapStateToProps = __webpack_require__(245);
+	
+	var _mapStateToProps2 = _interopRequireDefault(_mapStateToProps);
+	
+	var _mergeProps = __webpack_require__(246);
+	
+	var _mergeProps2 = _interopRequireDefault(_mergeProps);
+	
+	var _selectorFactory = __webpack_require__(247);
+	
+	var _selectorFactory2 = _interopRequireDefault(_selectorFactory);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	/*
+	  connect is a facade over connectAdvanced. It turns its args into a compatible
+	  selectorFactory, which has the signature:
+	
+	    (dispatch, options) => (nextState, nextOwnProps) => nextFinalProps
+	  
+	  connect passes its args to connectAdvanced as options, which will in turn pass them to
+	  selectorFactory each time a Connect component instance is instantiated or hot reloaded.
+	
+	  selectorFactory returns a final props selector from its mapStateToProps,
+	  mapStateToPropsFactories, mapDispatchToProps, mapDispatchToPropsFactories, mergeProps,
+	  mergePropsFactories, and pure args.
+	
+	  The resulting final props selector is called by the Connect component instance whenever
+	  it receives new props or store state.
+	 */
+	
+	function match(arg, factories, name) {
+	  for (var i = factories.length - 1; i >= 0; i--) {
+	    var result = factories[i](arg);
+	    if (result) return result;
+	  }
+	
+	  return function (dispatch, options) {
+	    throw new Error('Invalid value of type ' + typeof arg + ' for ' + name + ' argument when connecting component ' + options.wrappedComponentName + '.');
+	  };
+	}
+	
+	function strictEqual(a, b) {
+	  return a === b;
+	}
+	
+	// createConnect with default args builds the 'official' connect behavior. Calling it with
+	// different options opens up some testing and extensibility scenarios
+	function createConnect() {
+	  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+	      _ref$connectHOC = _ref.connectHOC,
+	      connectHOC = _ref$connectHOC === undefined ? _connectAdvanced2.default : _ref$connectHOC,
+	      _ref$mapStateToPropsF = _ref.mapStateToPropsFactories,
+	      mapStateToPropsFactories = _ref$mapStateToPropsF === undefined ? _mapStateToProps2.default : _ref$mapStateToPropsF,
+	      _ref$mapDispatchToPro = _ref.mapDispatchToPropsFactories,
+	      mapDispatchToPropsFactories = _ref$mapDispatchToPro === undefined ? _mapDispatchToProps2.default : _ref$mapDispatchToPro,
+	      _ref$mergePropsFactor = _ref.mergePropsFactories,
+	      mergePropsFactories = _ref$mergePropsFactor === undefined ? _mergeProps2.default : _ref$mergePropsFactor,
+	      _ref$selectorFactory = _ref.selectorFactory,
+	      selectorFactory = _ref$selectorFactory === undefined ? _selectorFactory2.default : _ref$selectorFactory;
+	
+	  return function connect(mapStateToProps, mapDispatchToProps, mergeProps) {
+	    var _ref2 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+	        _ref2$pure = _ref2.pure,
+	        pure = _ref2$pure === undefined ? true : _ref2$pure,
+	        _ref2$areStatesEqual = _ref2.areStatesEqual,
+	        areStatesEqual = _ref2$areStatesEqual === undefined ? strictEqual : _ref2$areStatesEqual,
+	        _ref2$areOwnPropsEqua = _ref2.areOwnPropsEqual,
+	        areOwnPropsEqual = _ref2$areOwnPropsEqua === undefined ? _shallowEqual2.default : _ref2$areOwnPropsEqua,
+	        _ref2$areStatePropsEq = _ref2.areStatePropsEqual,
+	        areStatePropsEqual = _ref2$areStatePropsEq === undefined ? _shallowEqual2.default : _ref2$areStatePropsEq,
+	        _ref2$areMergedPropsE = _ref2.areMergedPropsEqual,
+	        areMergedPropsEqual = _ref2$areMergedPropsE === undefined ? _shallowEqual2.default : _ref2$areMergedPropsE,
+	        extraOptions = _objectWithoutProperties(_ref2, ['pure', 'areStatesEqual', 'areOwnPropsEqual', 'areStatePropsEqual', 'areMergedPropsEqual']);
+	
+	    var initMapStateToProps = match(mapStateToProps, mapStateToPropsFactories, 'mapStateToProps');
+	    var initMapDispatchToProps = match(mapDispatchToProps, mapDispatchToPropsFactories, 'mapDispatchToProps');
+	    var initMergeProps = match(mergeProps, mergePropsFactories, 'mergeProps');
+	
+	    return connectHOC(selectorFactory, _extends({
+	      // used in error messages
+	      methodName: 'connect',
+	
+	      // used to compute Connect's displayName from the wrapped component's displayName.
+	      getDisplayName: function getDisplayName(name) {
+	        return 'Connect(' + name + ')';
+	      },
+	
+	      // if mapStateToProps is falsy, the Connect component doesn't subscribe to store state changes
+	      shouldHandleStateChanges: Boolean(mapStateToProps),
+	
+	      // passed through to selectorFactory
+	      initMapStateToProps: initMapStateToProps,
+	      initMapDispatchToProps: initMapDispatchToProps,
+	      initMergeProps: initMergeProps,
+	      pure: pure,
+	      areStatesEqual: areStatesEqual,
+	      areOwnPropsEqual: areOwnPropsEqual,
+	      areStatePropsEqual: areStatePropsEqual,
+	      areMergedPropsEqual: areMergedPropsEqual
+	
+	    }, extraOptions));
+	  };
+	}
+	
+	exports.default = createConnect();
+
+/***/ },
+/* 241 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	exports.default = shallowEqual;
+	var hasOwn = Object.prototype.hasOwnProperty;
+	
+	function shallowEqual(a, b) {
+	  if (a === b) return true;
+	
+	  var countA = 0;
+	  var countB = 0;
+	
+	  for (var key in a) {
+	    if (hasOwn.call(a, key) && a[key] !== b[key]) return false;
+	    countA++;
+	  }
+	
+	  for (var _key in b) {
+	    if (hasOwn.call(b, _key)) countB++;
+	  }
+	
+	  return countA === countB;
+	}
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.whenMapDispatchToPropsIsFunction = whenMapDispatchToPropsIsFunction;
+	exports.whenMapDispatchToPropsIsMissing = whenMapDispatchToPropsIsMissing;
+	exports.whenMapDispatchToPropsIsObject = whenMapDispatchToPropsIsObject;
+	
+	var _redux = __webpack_require__(179);
+	
+	var _wrapMapToProps = __webpack_require__(243);
+	
+	function whenMapDispatchToPropsIsFunction(mapDispatchToProps) {
+	  return typeof mapDispatchToProps === 'function' ? (0, _wrapMapToProps.wrapMapToPropsFunc)(mapDispatchToProps, 'mapDispatchToProps') : undefined;
+	}
+	
+	function whenMapDispatchToPropsIsMissing(mapDispatchToProps) {
+	  return !mapDispatchToProps ? (0, _wrapMapToProps.wrapMapToPropsConstant)(function (dispatch) {
+	    return { dispatch: dispatch };
+	  }) : undefined;
+	}
+	
+	function whenMapDispatchToPropsIsObject(mapDispatchToProps) {
+	  return mapDispatchToProps && typeof mapDispatchToProps === 'object' ? (0, _wrapMapToProps.wrapMapToPropsConstant)(function (dispatch) {
+	    return (0, _redux.bindActionCreators)(mapDispatchToProps, dispatch);
+	  }) : undefined;
+	}
+	
+	exports.default = [whenMapDispatchToPropsIsFunction, whenMapDispatchToPropsIsMissing, whenMapDispatchToPropsIsObject];
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	
+	exports.__esModule = true;
+	exports.wrapMapToPropsConstant = wrapMapToPropsConstant;
+	exports.getDependsOnOwnProps = getDependsOnOwnProps;
+	exports.wrapMapToPropsFunc = wrapMapToPropsFunc;
+	
+	var _verifyPlainObject = __webpack_require__(244);
+	
+	var _verifyPlainObject2 = _interopRequireDefault(_verifyPlainObject);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function wrapMapToPropsConstant(getConstant) {
+	  return function initConstantSelector(dispatch, options) {
+	    var constant = getConstant(dispatch, options);
+	
+	    function constantSelector() {
+	      return constant;
+	    }
+	    constantSelector.dependsOnOwnProps = false;
+	    return constantSelector;
+	  };
+	}
+	
+	// dependsOnOwnProps is used by createMapToPropsProxy to determine whether to pass props as args
+	// to the mapToProps function being wrapped. It is also used by makePurePropsSelector to determine
+	// whether mapToProps needs to be invoked when props have changed.
+	// 
+	// A length of one signals that mapToProps does not depend on props from the parent component.
+	// A length of zero is assumed to mean mapToProps is getting args via arguments or ...args and
+	// therefore not reporting its length accurately..
+	function getDependsOnOwnProps(mapToProps) {
+	  return mapToProps.dependsOnOwnProps !== null && mapToProps.dependsOnOwnProps !== undefined ? Boolean(mapToProps.dependsOnOwnProps) : mapToProps.length !== 1;
+	}
+	
+	// Used by whenMapStateToPropsIsFunction and whenMapDispatchToPropsIsFunction,
+	// this function wraps mapToProps in a proxy function which does several things:
+	// 
+	//  * Detects whether the mapToProps function being called depends on props, which
+	//    is used by selectorFactory to decide if it should reinvoke on props changes.
+	//    
+	//  * On first call, handles mapToProps if returns another function, and treats that
+	//    new function as the true mapToProps for subsequent calls.
+	//    
+	//  * On first call, verifies the first result is a plain object, in order to warn
+	//    the developer that their mapToProps function is not returning a valid result.
+	//    
+	function wrapMapToPropsFunc(mapToProps, methodName) {
+	  return function initProxySelector(dispatch, _ref) {
+	    var displayName = _ref.displayName;
+	
+	    var proxy = function mapToPropsProxy(stateOrDispatch, ownProps) {
+	      return proxy.dependsOnOwnProps ? proxy.mapToProps(stateOrDispatch, ownProps) : proxy.mapToProps(stateOrDispatch);
+	    };
+	
+	    proxy.dependsOnOwnProps = getDependsOnOwnProps(mapToProps);
+	
+	    proxy.mapToProps = function detectFactoryAndVerify(stateOrDispatch, ownProps) {
+	      proxy.mapToProps = mapToProps;
+	      var props = proxy(stateOrDispatch, ownProps);
+	
+	      if (typeof props === 'function') {
+	        proxy.mapToProps = props;
+	        proxy.dependsOnOwnProps = getDependsOnOwnProps(props);
+	        props = proxy(stateOrDispatch, ownProps);
+	      }
+	
+	      if (process.env.NODE_ENV !== 'production') (0, _verifyPlainObject2.default)(props, displayName, methodName);
+	
+	      return props;
+	    };
+	
+	    return proxy;
+	  };
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.default = verifyPlainObject;
+	
+	var _isPlainObject = __webpack_require__(181);
+	
+	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+	
+	var _warning = __webpack_require__(236);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function verifyPlainObject(value, displayName, methodName) {
+	  if (!(0, _isPlainObject2.default)(value)) {
+	    (0, _warning2.default)(methodName + '() in ' + displayName + ' must return a plain object. Instead received ' + value + '.');
+	  }
+	}
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.whenMapStateToPropsIsFunction = whenMapStateToPropsIsFunction;
+	exports.whenMapStateToPropsIsMissing = whenMapStateToPropsIsMissing;
+	
+	var _wrapMapToProps = __webpack_require__(243);
+	
+	function whenMapStateToPropsIsFunction(mapStateToProps) {
+	  return typeof mapStateToProps === 'function' ? (0, _wrapMapToProps.wrapMapToPropsFunc)(mapStateToProps, 'mapStateToProps') : undefined;
+	}
+	
+	function whenMapStateToPropsIsMissing(mapStateToProps) {
+	  return !mapStateToProps ? (0, _wrapMapToProps.wrapMapToPropsConstant)(function () {
+	    return {};
+	  }) : undefined;
+	}
+	
+	exports.default = [whenMapStateToPropsIsFunction, whenMapStateToPropsIsMissing];
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	
+	exports.__esModule = true;
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.defaultMergeProps = defaultMergeProps;
+	exports.wrapMergePropsFunc = wrapMergePropsFunc;
+	exports.whenMergePropsIsFunction = whenMergePropsIsFunction;
+	exports.whenMergePropsIsOmitted = whenMergePropsIsOmitted;
+	
+	var _verifyPlainObject = __webpack_require__(244);
+	
+	var _verifyPlainObject2 = _interopRequireDefault(_verifyPlainObject);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function defaultMergeProps(stateProps, dispatchProps, ownProps) {
+	  return _extends({}, ownProps, stateProps, dispatchProps);
+	}
+	
+	function wrapMergePropsFunc(mergeProps) {
+	  return function initMergePropsProxy(dispatch, _ref) {
+	    var displayName = _ref.displayName,
+	        pure = _ref.pure,
+	        areMergedPropsEqual = _ref.areMergedPropsEqual;
+	
+	    var hasRunOnce = false;
+	    var mergedProps = void 0;
+	
+	    return function mergePropsProxy(stateProps, dispatchProps, ownProps) {
+	      var nextMergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+	
+	      if (hasRunOnce) {
+	        if (!pure || !areMergedPropsEqual(nextMergedProps, mergedProps)) mergedProps = nextMergedProps;
+	      } else {
+	        hasRunOnce = true;
+	        mergedProps = nextMergedProps;
+	
+	        if (process.env.NODE_ENV !== 'production') (0, _verifyPlainObject2.default)(mergedProps, displayName, 'mergeProps');
+	      }
+	
+	      return mergedProps;
+	    };
+	  };
+	}
+	
+	function whenMergePropsIsFunction(mergeProps) {
+	  return typeof mergeProps === 'function' ? wrapMergePropsFunc(mergeProps) : undefined;
+	}
+	
+	function whenMergePropsIsOmitted(mergeProps) {
+	  return !mergeProps ? function () {
+	    return defaultMergeProps;
+	  } : undefined;
+	}
+	
+	exports.default = [whenMergePropsIsFunction, whenMergePropsIsOmitted];
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	
+	exports.__esModule = true;
+	exports.impureFinalPropsSelectorFactory = impureFinalPropsSelectorFactory;
+	exports.pureFinalPropsSelectorFactory = pureFinalPropsSelectorFactory;
+	exports.default = finalPropsSelectorFactory;
+	
+	var _verifySubselectors = __webpack_require__(248);
+	
+	var _verifySubselectors2 = _interopRequireDefault(_verifySubselectors);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	function impureFinalPropsSelectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch) {
+	  return function impureFinalPropsSelector(state, ownProps) {
+	    return mergeProps(mapStateToProps(state, ownProps), mapDispatchToProps(dispatch, ownProps), ownProps);
+	  };
+	}
+	
+	function pureFinalPropsSelectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, _ref) {
+	  var areStatesEqual = _ref.areStatesEqual,
+	      areOwnPropsEqual = _ref.areOwnPropsEqual,
+	      areStatePropsEqual = _ref.areStatePropsEqual;
+	
+	  var hasRunAtLeastOnce = false;
+	  var state = void 0;
+	  var ownProps = void 0;
+	  var stateProps = void 0;
+	  var dispatchProps = void 0;
+	  var mergedProps = void 0;
+	
+	  function handleFirstCall(firstState, firstOwnProps) {
+	    state = firstState;
+	    ownProps = firstOwnProps;
+	    stateProps = mapStateToProps(state, ownProps);
+	    dispatchProps = mapDispatchToProps(dispatch, ownProps);
+	    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+	    hasRunAtLeastOnce = true;
+	    return mergedProps;
+	  }
+	
+	  function handleNewPropsAndNewState() {
+	    stateProps = mapStateToProps(state, ownProps);
+	
+	    if (mapDispatchToProps.dependsOnOwnProps) dispatchProps = mapDispatchToProps(dispatch, ownProps);
+	
+	    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+	    return mergedProps;
+	  }
+	
+	  function handleNewProps() {
+	    if (mapStateToProps.dependsOnOwnProps) stateProps = mapStateToProps(state, ownProps);
+	
+	    if (mapDispatchToProps.dependsOnOwnProps) dispatchProps = mapDispatchToProps(dispatch, ownProps);
+	
+	    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+	    return mergedProps;
+	  }
+	
+	  function handleNewState() {
+	    var nextStateProps = mapStateToProps(state, ownProps);
+	    var statePropsChanged = !areStatePropsEqual(nextStateProps, stateProps);
+	    stateProps = nextStateProps;
+	
+	    if (statePropsChanged) mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+	
+	    return mergedProps;
+	  }
+	
+	  function handleSubsequentCalls(nextState, nextOwnProps) {
+	    var propsChanged = !areOwnPropsEqual(nextOwnProps, ownProps);
+	    var stateChanged = !areStatesEqual(nextState, state);
+	    state = nextState;
+	    ownProps = nextOwnProps;
+	
+	    if (propsChanged && stateChanged) return handleNewPropsAndNewState();
+	    if (propsChanged) return handleNewProps();
+	    if (stateChanged) return handleNewState();
+	    return mergedProps;
+	  }
+	
+	  return function pureFinalPropsSelector(nextState, nextOwnProps) {
+	    return hasRunAtLeastOnce ? handleSubsequentCalls(nextState, nextOwnProps) : handleFirstCall(nextState, nextOwnProps);
+	  };
+	}
+	
+	// TODO: Add more comments
+	
+	// If pure is true, the selector returned by selectorFactory will memoize its results,
+	// allowing connectAdvanced's shouldComponentUpdate to return false if final
+	// props have not changed. If false, the selector will always return a new
+	// object and shouldComponentUpdate will always return true.
+	
+	function finalPropsSelectorFactory(dispatch, _ref2) {
+	  var initMapStateToProps = _ref2.initMapStateToProps,
+	      initMapDispatchToProps = _ref2.initMapDispatchToProps,
+	      initMergeProps = _ref2.initMergeProps,
+	      options = _objectWithoutProperties(_ref2, ['initMapStateToProps', 'initMapDispatchToProps', 'initMergeProps']);
+	
+	  var mapStateToProps = initMapStateToProps(dispatch, options);
+	  var mapDispatchToProps = initMapDispatchToProps(dispatch, options);
+	  var mergeProps = initMergeProps(dispatch, options);
+	
+	  if (process.env.NODE_ENV !== 'production') {
+	    (0, _verifySubselectors2.default)(mapStateToProps, mapDispatchToProps, mergeProps, options.displayName);
+	  }
+	
+	  var selectorFactory = options.pure ? pureFinalPropsSelectorFactory : impureFinalPropsSelectorFactory;
+	
+	  return selectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, options);
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.default = verifySubselectors;
+	
+	var _warning = __webpack_require__(236);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function verify(selector, methodName, displayName) {
+	  if (!selector) {
+	    throw new Error('Unexpected value for ' + methodName + ' in ' + displayName + '.');
+	  } else if (methodName === 'mapStateToProps' || methodName === 'mapDispatchToProps') {
+	    if (!selector.hasOwnProperty('dependsOnOwnProps')) {
+	      (0, _warning2.default)('The selector for ' + methodName + ' of ' + displayName + ' did not specify a value for dependsOnOwnProps.');
+	    }
+	  }
+	}
+	
+	function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, displayName) {
+	  verify(mapStateToProps, 'mapStateToProps', displayName);
+	  verify(mapDispatchToProps, 'mapDispatchToProps', displayName);
+	  verify(mergeProps, 'mergeProps', displayName);
+	}
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(232);
+	
+	var _Lasertank = __webpack_require__(250);
+	
+	var _Lasertank2 = _interopRequireDefault(_Lasertank);
+	
+	var _boardActions = __webpack_require__(204);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    board: state.game.board.present,
+	    laser: state.game.laser,
+	    levelNumber: state.game.levelNumber,
+	    score: state.score,
+	    gameOver: state.game.gameOver,
+	    won: state.game.won,
+	    levelDifficulty: state.game.levelDifficulty,
+	    levelMessage: state.game.levelMessage
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    moveUp: function moveUp() {
+	      return dispatch((0, _boardActions.moveUp)());
+	    },
+	    moveDown: function moveDown() {
+	      return dispatch((0, _boardActions.moveDown)());
+	    },
+	    moveLeft: function moveLeft() {
+	      return dispatch((0, _boardActions.moveLeft)());
+	    },
+	    moveRight: function moveRight() {
+	      return dispatch((0, _boardActions.moveRight)());
+	    },
+	    shootUp: function shootUp(board, x, y) {
+	      return dispatch((0, _boardActions.shootUp)(board, x, y));
+	    },
+	    shootDown: function shootDown(board, x, y) {
+	      return dispatch((0, _boardActions.shootDown)(board, x, y));
+	    },
+	    shootLeft: function shootLeft(board, x, y) {
+	      return dispatch((0, _boardActions.shootLeft)(board, x, y));
+	    },
+	    shootRight: function shootRight(board, x, y) {
+	      return dispatch((0, _boardActions.shootRight)(board, x, y));
+	    },
+	    moveLaserForward: function moveLaserForward() {
+	      return dispatch((0, _boardActions.moveLaserForward)());
+	    },
+	    setLevel: function setLevel(levelNumber) {
+	      return dispatch((0, _boardActions.setLevel)(levelNumber));
+	    },
+	    resetLevel: function resetLevel() {
+	      return dispatch((0, _boardActions.resetLevel)());
+	    },
+	    undo: function undo() {
+	      return dispatch((0, _boardActions.undo)());
+	    },
+	    moveTank: function moveTank(dx, dy) {
+	      return dispatch((0, _boardActions.moveTank)(dx, dy));
+	    },
+	    shootLaser: function shootLaser(board, x, y, dx, dy) {
+	      return dispatch((0, _boardActions.shootLaser)(board, x, y, dx, dy));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Lasertank2.default);
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _board = __webpack_require__(205);
+	
+	var _Game = __webpack_require__(251);
+	
+	var _Game2 = _interopRequireDefault(_Game);
+	
+	var _Rectangle = __webpack_require__(252);
+	
+	var _Rectangle2 = _interopRequireDefault(_Rectangle);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Lasertank = function (_React$Component) {
+	  _inherits(Lasertank, _React$Component);
+	
+	  function Lasertank(props) {
+	    _classCallCheck(this, Lasertank);
+	
+	    var _this = _possibleConstructorReturn(this, (Lasertank.__proto__ || Object.getPrototypeOf(Lasertank)).call(this, props));
+	
+	    _this.handleShootClick = _this.handleShootClick.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(Lasertank, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      this.props.setLevel(1);
+	
+	      window.addEventListener("keydown", function (e) {
+	        var _props = _this2.props,
+	            laser = _props.laser,
+	            board = _props.board;
+	
+	        if (laser && laser.x !== null && laser.y !== null) {
+	          console.log('Can not move while laser on board!');
+	          return null;
+	        }
+	        if (!board) return null;
+	
+	        var _findTank = (0, _board.findTank)(board),
+	            tankX = _findTank.tankX,
+	            tankY = _findTank.tankY;
+	
+	        switch (e.keyCode) {
+	          case 65:
+	            _this2.props.shootLeft(board, tankX, tankY);
+	            break;
+	          case 37:
+	            _this2.props.moveLeft();
+	            break;
+	          case 68:
+	            _this2.props.shootRight(board, tankX, tankY);
+	            break;
+	          case 39:
+	            _this2.props.moveRight();
+	            break;
+	          case 87:
+	            _this2.props.shootUp(board, tankX, tankY);
+	            break;
+	          case 38:
+	            _this2.props.moveUp();
+	            break;
+	          case 83:
+	            _this2.props.shootDown(board, tankX, tankY);
+	            break;
+	          case 40:
+	            _this2.props.moveDown();
+	            break;
+	        }
+	      });
+	      var canvas = document.getElementById("board");
+	      canvas.addEventListener('click', function (e) {
+	        var x = Math.floor(e.layerX / 60);
+	        var y = Math.floor(e.layerY / 60);
+	        console.log('click:', x, y);
+	
+	        var _props2 = _this2.props,
+	            laser = _props2.laser,
+	            board = _props2.board;
+	
+	        if (laser && laser.x !== null && laser.y !== null) {
+	          console.log('Can not move while laser on board!');
+	          return null;
+	        }
+	
+	        var moves = (0, _board.findPath)(board, x, y);
+	        if (moves.length === 0) {
+	          console.log('Can not move there');
+	          _this2.handleShootClick(e);
+	          return;
+	        }
+	
+	        var tankX = moves[0][0];
+	        var tankY = moves[0][1];
+	        var dx = void 0,
+	            dy = void 0;
+	        moves.slice(1).forEach(function (pos, idx) {
+	          setTimeout(function () {
+	            _this2.moving = true;
+	            dx = pos[0] - tankX;
+	            dy = pos[1] - tankY;
+	
+	            var _pos = _slicedToArray(pos, 2);
+	
+	            tankX = _pos[0];
+	            tankY = _pos[1];
+	
+	            _this2.props.moveTank(dx, dy);
+	            _this2.moving = false;
+	          }, 100 * idx);
+	        });
+	      });
+	
+	      canvas.addEventListener('contextmenu', this.handleShootClick);
+	    }
+	  }, {
+	    key: 'handleShootClick',
+	    value: function handleShootClick(e) {
+	      e.preventDefault();
+	
+	      var _props3 = this.props,
+	          laser = _props3.laser,
+	          board = _props3.board;
+	
+	      if (laser && laser.x && laser.y) {
+	        console.log('Can not shoot while laser on board!');
+	        return null;
+	      }
+	
+	      if (this.moving) {
+	        console.log('Can not shoot while moving');
+	        return null;
+	      }
+	      var x = Math.floor(e.layerX / 60);
+	      var y = Math.floor(e.layerY / 60);
+	
+	      var _findTank2 = (0, _board.findTank)(this.props.board),
+	          tankX = _findTank2.tankX,
+	          tankY = _findTank2.tankY;
+	
+	      var dx = tankX - x;
+	      var dy = tankY - y;
+	      if (Math.abs(dx) < Math.abs(dy)) {
+	        if (dy > 0) {
+	          this.props.shootUp(board, tankX, tankY);
+	        } else {
+	          this.props.shootDown(board, tankX, tankY);
+	        }
+	      } else {
+	        if (dx < 0) {
+	          this.props.shootRight(board, tankX, tankY);
+	        } else {
+	          this.props.shootLeft(board, tankX, tankY);
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      var _props4 = this.props,
+	          laser = _props4.laser,
+	          board = _props4.board;
+	
+	      if (laser && laser.x !== null && laser.y !== null) {
+	        setTimeout(this.props.moveLaserForward, 50);
+	      }
+	
+	      if (this.props.won) {
+	        this.props.setLevel(this.props.levelNumber + 1);
+	      }
+	    }
+	  }, {
+	    key: 'generateTiles',
+	    value: function generateTiles() {
+	      var _props5 = this.props,
+	          laser = _props5.laser,
+	          board = _props5.board;
+	
+	      var tiles = [];
+	
+	      board.forEach(function (row, rowIdx) {
+	        row.forEach(function (el, colIdx) {
+	          var laserOver = false;
+	          if (laser && laser.x === colIdx && laser.y === rowIdx) {
+	            laserOver = true;
+	          }
+	
+	          tiles.push(_react2.default.createElement(_Rectangle2.default, {
+	            key: colIdx + '-' + rowIdx,
+	            object: el,
+	            x: colIdx * 120,
+	            y: rowIdx * 120,
+	            w: 120,
+	            h: 120,
+	            laserOver: laserOver }));
+	        });
+	      });
+	
+	      if (laser && laser.x !== null && laser.y !== null) {
+	        tiles.push(_react2.default.createElement(_Rectangle2.default, {
+	          key: 'laser',
+	          object: 'L',
+	          x: laser.x * 120 + 40,
+	          y: laser.y * 120 + 40,
+	          w: 40,
+	          h: 40 }));
+	      }
+	
+	      return tiles;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'main' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'header' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'logo' },
+	            'PuzzleBall Game'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sub-title' },
+	            'inspired by ',
+	            _react2.default.createElement(
+	              'a',
+	              { target: '_blank', href: 'http://perso.cgocable.ca/lasertank/ltank_en.html' },
+	              'LaserTank'
+	            ),
+	            ' game'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'game' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'game-control' },
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'reset-button',
+	                onClick: this.props.resetLevel },
+	              'Reset'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'next-button',
+	                onClick: this.props.setLevel.bind(null, this.props.levelNumber + 1) },
+	              'Next Level'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'prev-button',
+	                onClick: this.props.setLevel.bind(null, this.props.levelNumber - 1) },
+	              'Prev Level'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'undo-button',
+	                onClick: this.props.undo },
+	              'Undo'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'control-info' },
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                'Move'
+	              ),
+	              _react2.default.createElement('img', { src: './frontend/sprites/mouse.svg', alt: 'mouse' }),
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                'Shoot'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _Game2.default,
+	            null,
+	            this.generateTiles()
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'level-status' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-number-label' },
+	              'Level Number'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-number-value' },
+	              this.props.levelNumber
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-difficulty-label' },
+	              'Difficulty'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-author-value' },
+	              this.props.levelDifficulty
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-moves-label' },
+	              'Moves'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-moves-value' },
+	              this.props.score.moves
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-shots-label' },
+	              'Shots'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-shots-value' },
+	              this.props.score.shots
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-hint-label' },
+	              'Hint'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'level-hint-value' },
+	              this.props.levelMessage
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Lasertank;
+	}(_react2.default.Component);
+	
+	exports.default = Lasertank;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Game = function (_React$Component) {
+	  _inherits(Game, _React$Component);
+	
+	  function Game(props) {
+	    _classCallCheck(this, Game);
+	
+	    var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
+	
+	    _this.state = {
+	      ctx: null
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(Game, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      var c = document.getElementById("board");
+	      var ctx = c.getContext("2d");
+	
+	      this.setState({ ctx: ctx });
+	    }
+	  }, {
+	    key: "mapChildren",
+	    value: function mapChildren() {
+	      var _this2 = this;
+	
+	      return _react2.default.Children.map(this.props.children, function (child) {
+	        return _react2.default.cloneElement(child, {
+	          ctx: _this2.state.ctx
+	        });
+	      });
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "canvas",
+	        { id: "board", width: "1200px", height: "1200px" },
+	        this.state.ctx ? this.mapChildren() : []
+	      );
+	    }
+	  }]);
+	
+	  return Game;
+	}(_react2.default.Component);
+	
+	exports.default = Game;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _sprites = __webpack_require__(253);
+	
+	var Sprites = _interopRequireWildcard(_sprites);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var propTypes = {
+	  ctx: _react2.default.PropTypes.instanceOf(CanvasRenderingContext2D),
+	  color: _react2.default.PropTypes.string,
+	  x: _react2.default.PropTypes.number,
+	  y: _react2.default.PropTypes.number,
+	  w: _react2.default.PropTypes.number,
+	  h: _react2.default.PropTypes.number
+	};
+	
+	var Rectangle = function (_React$Component) {
+	  _inherits(Rectangle, _React$Component);
+	
+	  function Rectangle(props) {
+	    _classCallCheck(this, Rectangle);
+	
+	    return _possibleConstructorReturn(this, (Rectangle.__proto__ || Object.getPrototypeOf(Rectangle)).call(this, props));
+	  }
+	
+	  _createClass(Rectangle, [{
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      return this.props.object !== nextProps.object || this.props.x !== nextProps.x || this.props.y !== nextProps.y || this.props.laserOver !== nextProps.laserOver;
+	    }
+	  }, {
+	    key: 'clearSelf',
+	    value: function clearSelf() {
+	      var _props = this.props,
+	          ctx = _props.ctx,
+	          x = _props.x,
+	          y = _props.y,
+	          w = _props.w,
+	          h = _props.h;
+	
+	      ctx.clearRect(x, y, w, h);
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props2 = this.props,
+	          ctx = _props2.ctx,
+	          object = _props2.object,
+	          x = _props2.x,
+	          y = _props2.y,
+	          w = _props2.w,
+	          h = _props2.h,
+	          laserOver = _props2.laserOver;
+	
+	
+	      switch (object) {
+	        case 'S':
+	          Sprites.drawGround(ctx, x, y, w, h);
+	          Sprites.drawSolidBlock(ctx, x, y, w, h);
+	          break;
+	        case 'T':
+	          Sprites.drawGround(ctx, x, y, w, h);
+	          Sprites.drawTank(ctx, x, y, w, h);
+	          break;
+	        case 'F':
+	          Sprites.drawGround(ctx, x, y, w, h);
+	          Sprites.drawFlag(ctx, x, y, w, h);
+	          break;
+	        case 'M':
+	          Sprites.drawGround(ctx, x, y, w, h);
+	          Sprites.drawMovableBlock(ctx, x, y, w, h);
+	          break;
+	        case 'W':
+	          Sprites.drawWater(ctx, x, y, w, h);
+	          break;
+	        case 'L':
+	          Sprites.drawLaser(ctx, x, y, w, h);
+	          break;
+	        default:
+	          Sprites.drawGround(ctx, x, y, w, h);
+	          break;
+	      }
+	
+	      return null;
+	    }
+	  }]);
+	
+	  return Rectangle;
+	}(_react2.default.Component);
+	
+	exports.default = Rectangle;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var drawSolidBlock = exports.drawSolidBlock = function drawSolidBlock(ctx, x, y, w, h) {
+	  var color = '#A2A9AF';
+	
+	  ctx.fillStyle = color;
+	  ctx.fillRect(x, y, w, h);
+	
+	  ctx.shadowOffsetX = 2;
+	  ctx.shadowOffsetY = 2;
+	  ctx.shadowBlur = 1;
+	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
+	
+	  color = '#747E80';
+	  ctx.fillStyle = color;
+	  ctx.fillRect(x + 3, y + 3, w - 8, h - 8);
+	  clearShadows(ctx);
+	};
+	
+	var drawTank = exports.drawTank = function drawTank(ctx, x, y, w, h) {
+	  var color = '#A2A9AF';
+	  ctx.fillStyle = color;
+	  ctx.fillRect(x, y, w, h);
+	  ctx.shadowOffsetX = 2;
+	  ctx.shadowOffsetY = 2;
+	  ctx.shadowBlur = 1;
+	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
+	  color = '#009A31';
+	  ctx.beginPath();
+	  ctx.fillStyle = color;
+	  ctx.arc(x + 60, y + 60, 40, 0, 2 * Math.PI, false);
+	  ctx.fill();
+	  clearShadows(ctx);
+	};
+	
+	var drawFlag = exports.drawFlag = function drawFlag(ctx, x, y, w, h) {
+	  var color = '#E5446D';
+	  ctx.shadowOffsetX = 2;
+	  ctx.shadowOffsetY = 2;
+	  ctx.shadowBlur = 5;
+	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
+	  ctx.fillStyle = color;
+	  ctx.fillRect(x + 25, y + 20, 5, 90);
+	  ctx.beginPath();
+	  ctx.moveTo(x + 35, y + 25);
+	  ctx.lineTo(x + 95, y + 25);
+	  ctx.lineTo(x + 75, y + 45);
+	  ctx.lineTo(x + 95, y + 65);
+	  ctx.lineTo(x + 35, y + 65);
+	  ctx.fill();
+	
+	  clearShadows(ctx);
+	};
+	
+	var drawLaser = exports.drawLaser = function drawLaser(ctx, x, y, w, h) {
+	  ctx.shadowOffsetX = 1;
+	  ctx.shadowOffsetY = 1;
+	  ctx.shadowBlur = 2;
+	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
+	  var color = "#009A31";
+	  ctx.beginPath();
+	  ctx.arc(x + 20, y + 20, w / 2, 0, 2 * Math.PI, false);
+	  ctx.closePath();
+	  ctx.fillStyle = color;
+	  ctx.fill();
+	
+	  clearShadows(ctx);
+	};
+	
+	var drawMovableBlock = exports.drawMovableBlock = function drawMovableBlock(ctx, x, y, w, h) {
+	  ctx.shadowOffsetX = 2;
+	  ctx.shadowOffsetY = 2;
+	  ctx.shadowBlur = 10;
+	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
+	  var color = '#EDAA53';
+	  ctx.fillStyle = color;
+	  ctx.fillRect(x + 10, y + 10, w - 20, h - 20);
+	  clearShadows(ctx);
+	};
+	
+	var drawGround = exports.drawGround = function drawGround(ctx, x, y, w, h) {
+	  var color = '#A2A9AF';
+	  ctx.fillStyle = color;
+	  ctx.fillRect(x, y, w, h);
+	};
+	
+	var drawWater = exports.drawWater = function drawWater(ctx, x, y, w, h) {
+	  ctx.shadowOffsetX = 0;
+	  ctx.shadowOffsetY = 0;
+	  ctx.shadowBlur = 0;
+	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
+	  var color = '#1B6AA5';
+	  ctx.fillStyle = color;
+	  ctx.fillRect(x, y, w, h);
+	  clearShadows(ctx);
+	};
+	
+	var clearShadows = function clearShadows(ctx) {
+	  ctx.shadowOffsetX = 0;
+	  ctx.shadowOffsetY = 0;
+	  ctx.shadowBlur = 0;
+	  ctx.shadowColor = "rgba(0, 0, 0, .75)";
+	};
 
 /***/ }
 /******/ ]);

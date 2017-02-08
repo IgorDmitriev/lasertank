@@ -7,7 +7,7 @@ import Rectangle from './Rectangle';
 class Lasertank extends React.Component {
   constructor (props) {
     super(props);
-
+    this.handleShootClick = this.handleShootClick.bind(this);
   }
 
   componentDidMount () {
@@ -64,6 +64,7 @@ class Lasertank extends React.Component {
       const moves = findPath(board, x, y);
       if (moves.length === 0) {
         console.log('Can not move there');
+        this.handleShootClick(e);
         return;
       }
 
@@ -83,38 +84,40 @@ class Lasertank extends React.Component {
 
     });
 
-    canvas.addEventListener('contextmenu', e => {
-      e.preventDefault();
+    canvas.addEventListener('contextmenu', this.handleShootClick);
+  }
 
-      const { laser, board } = this.props;
-      if (laser && laser.x && laser.y) {
-        console.log('Can not shoot while laser on board!');
-        return null;
-      }
+  handleShootClick (e) {
+    e.preventDefault();
 
-      if (this.moving) {
-        console.log('Can not shoot while moving');
-        return null;
-      }
-      const x = Math.floor(e.layerX / 60);
-      const y = Math.floor(e.layerY / 60);
-      const { tankX, tankY } = findTank(this.props.board);
-      let dx = tankX - x;
-      let dy = tankY - y;
-      if (Math.abs(dx) < Math.abs(dy)) {
-        if (dy > 0) {
-          this.props.shootUp(board, tankX, tankY);
-        } else {
-          this.props.shootDown(board, tankX, tankY);
-        }
+    const { laser, board } = this.props;
+    if (laser && laser.x && laser.y) {
+      console.log('Can not shoot while laser on board!');
+      return null;
+    }
+
+    if (this.moving) {
+      console.log('Can not shoot while moving');
+      return null;
+    }
+    const x = Math.floor(e.layerX / 60);
+    const y = Math.floor(e.layerY / 60);
+    const { tankX, tankY } = findTank(this.props.board);
+    let dx = tankX - x;
+    let dy = tankY - y;
+    if (Math.abs(dx) < Math.abs(dy)) {
+      if (dy > 0) {
+        this.props.shootUp(board, tankX, tankY);
       } else {
-        if (dx < 0) {
-          this.props.shootRight(board, tankX, tankY);
-        } else {
-          this.props.shootLeft(board, tankX, tankY);
-        }
+        this.props.shootDown(board, tankX, tankY);
       }
-    });
+    } else {
+      if (dx < 0) {
+        this.props.shootRight(board, tankX, tankY);
+      } else {
+        this.props.shootLeft(board, tankX, tankY);
+      }
+    }
   }
 
   componentDidUpdate () {
